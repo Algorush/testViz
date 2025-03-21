@@ -57,7 +57,7 @@ const GlobeViz = ({ data, config }) => {
           );
 
           globe
-            .polygonsData(validGeojson.features)
+            .polygonsData(validGeojson)
             .polygonGeoJsonGeometry(d => d.geometry)
             .polygonCapColor(() => 'rgba(0, 0, 0, 0.2)') // Slightly more visible
             .polygonSideColor(() => 'rgba(0, 0, 0, 0.4)')

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const globe = new Globe(document.getElementById('globe-container'))
     .backgroundColor('#f5f5f5') // Светлый фон
-    //.pointOfView({ altitude: 3 }, 3000)
+    .pointOfView({ altitude: 3 }, 3000)
     .polygonCapColor(() => 'rgb(240, 240, 240)') // Матовые полигоны
     .polygonSideColor(() => 'rgb(200, 200, 200)')
     .polygonStrokeColor(() => '#aaa') // Нежный контур
@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Отображаем полигоны на глобусе
         globe
             .polygonsData(validGeojson)
-            //.polygonGeoJsonGeometry(d => d.geometry)
-            .polygonAltitude(0.00001)
+            .polygonGeoJsonGeometry(d => d.geometry)
+            //.polygonAltitude(1)
             .onPolygonClick((polygon) => {
                 const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
                 console.log("Выбрана страна:", countryName);

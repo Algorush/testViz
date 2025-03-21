@@ -63,7 +63,6 @@ const GlobeViz = ({ data, config }) => {
             .polygonSideColor(() => 'rgb(200, 200, 200)')
             .polygonStrokeColor(() => '#aaa')
             .polygonLabel(d => d.properties.ADMIN)
-            .polygonAltitude(0)
             .onPolygonClick((polygon) => {
               const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
               applyTableauFilter(countryName);

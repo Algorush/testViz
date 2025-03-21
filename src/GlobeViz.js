@@ -46,7 +46,7 @@ const GlobeViz = ({ data, config }) => {
       }
 
       // Load polygon layer with error handling
-      fetch('/countries.geojson')
+      fetch('/countries.json')
         .then(res => {
           if (!res.ok) throw new Error('Failed to fetch countries.geojson');
           return res.json();

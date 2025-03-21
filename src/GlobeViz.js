@@ -46,6 +46,18 @@ const GlobeViz = ({ data, config }) => {
         globe.pointRadius(d => sizeScale(parseFloat(d[config.sizeField])));
       }
 
+      document.getElementById('globe-container').addEventListener('click', event => {
+        if (!event.target.closest('canvas')) return;
+        if (!selectedCountry) return;
+        resetView();
+      });
+
+      function resetView() {
+        globe.controls().autoRotate = true;
+        const currentView = globe.pointOfView();
+        globe.pointOfView({ ...currentView, altitude: 3 }, 1000);
+      }
+
       // Load polygon layer with error handling
       fetch('/ne_110m_admin_0_countries.geojson')
         .then(res => {
@@ -68,13 +80,12 @@ const GlobeViz = ({ data, config }) => {
               const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
               const center = getPolygonCenter(polygon.geometry);
 
-              if (!isZoomedIn) {
+              if (!isZoomedIn || (selectedCountry !== countryName)) {
+                selectedCountry = countryName;
                 globe.controls().autoRotate = false;
                 globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: 0.7 }, 2000);
-              } else {
-                  globe.controls().autoRotate = true;
-                  const currentView = globe.pointOfView();
-                  globe.pointOfView({ ...currentView, altitude: 3 }, 1000);
+              } else if (selectedCountry === countryName) {
+                  resetView();
               }
               isZoomedIn = !isZoomedIn;
 

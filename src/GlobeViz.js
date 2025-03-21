@@ -31,7 +31,7 @@ const GlobeViz = ({ data, config }) => {
         .pointLng('lng')
         .pointRadius(0.3) // Flat circle size
         .pointColor(() => '#ff6200') // Orange circles
-        .pointAltitude(0) // Flat on surface
+        .pointAltitude(2) // Flat on surface
         .pointsMerge(false); // Disable merging for distinct circles
 
       // Optional size scaling
@@ -62,6 +62,8 @@ const GlobeViz = ({ data, config }) => {
             .polygonCapColor(() => 'rgb(240, 240, 240)')
             .polygonSideColor(() => 'rgb(200, 200, 200)')
             .polygonStrokeColor(() => '#aaa')
+            .polygonLabel(d => d.properties.ADMIN)
+            .polygonAltitude(0)
             .onPolygonClick((polygon) => {
               const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
               applyTableauFilter(countryName);

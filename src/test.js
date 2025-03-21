@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const globe = new Globe(document.getElementById('globe-container'))
     .backgroundColor('#f5f5f5') // Светлый фон
-    .pointOfView({ altitude: 3 }, 3000)
+    //.pointOfView({ altitude: 3 }, 3000)
     .polygonCapColor(() => 'rgb(240, 240, 240)') // Матовые полигоны
     .polygonSideColor(() => 'rgb(200, 200, 200)')
     .polygonStrokeColor(() => '#aaa') // Нежный контур
@@ -36,12 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
         globe
             .polygonsData(validGeojson)
             //.polygonGeoJsonGeometry(d => d.geometry)
-            //.polygonAltitude(0.01)
+            .polygonAltitude(0.00001)
             .onPolygonClick((polygon) => {
                 const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
                 console.log("Выбрана страна:", countryName);
                 applyTableauFilter(countryName);
             })
+            //.pointAltitude(0) // Flat on surface
+            .polygonLabel(d => d.properties.ADMIN)
             .onPolygonHover((polygon) => {
                 // Изменение цвета полигона при наведении
             });

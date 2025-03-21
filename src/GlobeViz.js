@@ -23,8 +23,8 @@ const GlobeViz = ({ data, config }) => {
 
       // Initialize globe
       globe = Globe({ contextOptions: { webgl2: false } })
-        //.globeImageUrl('/images/earth-day.png')
-        .backgroundColor('#ffffff')
+        .showAtmosphere(false)
+        .backgroundColor('#f5f5f5')
         .pointOfView({ lat: 30, lng: -90, altitude: 2 })
         .pointsData(data)
         .pointLat('lat')
@@ -46,7 +46,7 @@ const GlobeViz = ({ data, config }) => {
       }
 
       // Load polygon layer with error handling
-      fetch('/countries.json')
+      fetch('/ne_110m_admin_0_countries.geojson')
         .then(res => {
           if (!res.ok) throw new Error('Failed to fetch countries.geojson');
           return res.json();
@@ -75,16 +75,10 @@ const GlobeViz = ({ data, config }) => {
       globe(containerRef.current);
       globeEl.current = globe;
 
-      // Faster rotation
-      // let currentLng = -90;
-      // const rotationInterval = setInterval(() => {
-      //   currentLng = (currentLng + 2) % 360; // 20°/s
-      //   globe.pointOfView({
-      //     lat: 30,
-      //     lng: currentLng,
-      //     altitude: 2
-      //   });
-      // }, 100);
+      // rotation
+      const controls = globe.controls();
+      controls.autoRotate = true; // Включаем авто-вращение
+      controls.autoRotateSpeed = 1.2; 
 
       // Resize handler
       const handleResize = () => {

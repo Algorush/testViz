@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const globe = new Globe(document.getElementById('globe-container'))
     .backgroundColor('#f5f5f5') // Светлый фон
     .pointOfView({ altitude: 3 }, 3000)
-    .polygonCapColor(() => 'rgba(240, 240, 240, 0.9)') // Матовые полигоны
-    .polygonSideColor(() => 'rgba(200, 200, 200, 0.3)')
+    .polygonCapColor(() => 'rgb(240, 240, 240)') // Матовые полигоны
+    .polygonSideColor(() => 'rgb(200, 200, 200)')
     .polygonStrokeColor(() => '#aaa') // Нежный контур
     .showAtmosphere(false) // Отключаем атмосферу для чистого вида
     .pointOfView({ lat: 30, lng: -90, altitude: 2 })
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // renderer.shadowMap.enabled = true;
 
     // Загрузка GeoJSON
-    fetch('/dist/countries.json')
+    fetch('/ne_110m_admin_0_countries.geojson')
     .then(res => {
         if (!res.ok) throw new Error('Ошибка загрузки countries.geojson');
         return res.json();
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         globe
             .polygonsData(validGeojson)
             //.polygonGeoJsonGeometry(d => d.geometry)
-            .polygonAltitude(0.01)
+            //.polygonAltitude(0.01)
             .onPolygonClick((polygon) => {
                 const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
                 console.log("Выбрана страна:", countryName);
@@ -44,8 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .onPolygonHover((polygon) => {
                 // Изменение цвета полигона при наведении
-                const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
-                globe.polygonCapColor(() => 'rgba(255, 165, 0, 0.7)'); // Оранжевый цвет
             });
     })
     .catch(err => {

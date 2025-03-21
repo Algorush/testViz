@@ -15,6 +15,7 @@ const GlobeViz = ({ data, config }) => {
 
     let globe;
     let isZoomedIn = false; 
+    let selectedCountry = null;
     try {
       const testCanvas = document.createElement('canvas');
       const gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
@@ -46,10 +47,12 @@ const GlobeViz = ({ data, config }) => {
         globe.pointRadius(d => sizeScale(parseFloat(d[config.sizeField])));
       }
 
-      document.getElementById('globe-container').addEventListener('click', event => {
-        if (!event.target.closest('canvas')) return;
-        if (!selectedCountry) return;
-        resetView();
+      const globeEl = globe.renderer().domElement.parentNode;
+
+      globeEl.addEventListener('click', event => {
+          if (!event.target.closest('canvas')) return;
+          if (!selectedCountry) return;
+          resetView();
       });
 
       function resetView() {

@@ -1,0 +1,83 @@
+document.addEventListener('DOMContentLoaded', () => {
+
+    const globe = new Globe(document.getElementById('globe-container'))
+    .globeMaterial(new THREE.MeshBasicMaterial({
+        color: 0xdddddd, // Светло-серый цвет шара
+      }))
+    .backgroundColor('#f5f5f5') // Светлый фон
+    .pointOfView({ altitude: 3 }, 3000)
+    .polygonCapColor(() => 'rgba(240, 240, 240, 0.9)') // Матовые полигоны
+    .polygonSideColor(() => 'rgba(200, 200, 200, 0.3)')
+    .polygonStrokeColor(() => '#aaa') // Нежный контур
+    .showAtmosphere(false) // Отключаем атмосферу для чистого вида
+    .pointOfView({ lat: 30, lng: -90, altitude: 2 })
+    .pointLat('lat')
+    .pointLng('lng')
+    .pointRadius(0.3) // Flat circle size
+    .pointColor(() => '#ff6200') // Orange circles
+    .pointsMerge(false); // Disable merging for distinct circles
+
+    // // Добавляем освещение для мягких теней
+    // const renderer = globe.renderer();
+    // renderer.shadowMap.enabled = true;
+
+    // Загрузка GeoJSON
+    fetch('/countries.json')
+    .then(res => {
+        if (!res.ok) throw new Error('Ошибка загрузки countries.geojson');
+        return res.json();
+    })
+    .then(countriesGeojson => {
+        console.log("GeoJSON загружен:", countriesGeojson);
+    
+        // Фильтруем только допустимые геометрии
+        const validGeojson = countriesGeojson.features.filter(f =>
+            f.geometry !== null && (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon')
+        );
+    
+        // Отображаем полигоны на глобусе
+        globe
+            .polygonsData(validGeojson)
+            .polygonGeoJsonGeometry(d => d.geometry)
+            .polygonAltitude(0.01)
+            .onPolygonClick((polygon) => {
+                const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
+                console.log("Выбрана страна:", countryName);
+                applyTableauFilter(countryName);
+            });
+    })
+    .catch(err => {
+        console.error('Ошибка загрузки полигонов:', err);
+    });
+    
+    function applyTableauFilter(country) {
+    alert("Фильтр по стране: " + country);
+    }
+
+
+
+
+    // const world = new Globe(document.getElementById('globe-container'))
+    //   .globeImageUrl('//cdn.jsdelivr.net/npm/three-globe/example/img/earth-dark.jpg')
+    //   .pointOfView({ altitude: 4 }, 5000)
+    //   .polygonCapColor(feat => 'rgba(200, 0, 0, 0.6)')
+    //   .polygonSideColor(() => 'rgba(0, 100, 0, 0.05)')
+    //   .polygonLabel(({ properties: d }) => `
+    //       <b>${d.ADMIN} (${d.ISO_A2})</b> <br />
+    //       Population: <i>${Math.round(+d.POP_EST / 1e4) / 1e2}M</i>
+    //     `);
+
+    // Auto-rotate
+    // world.controls().autoRotate = true;
+    // world.controls().autoRotateSpeed = 1.8;
+
+    // fetch('/dist/countries.geojson').then(res => res.json()).then(countries => {
+    //   world.polygonsData(countries.features.filter(d => d.properties.ISO_A2 !== 'AQ'));
+
+    //   setTimeout(() => world
+    //     .polygonsTransitionDuration(4000)
+    //     .polygonAltitude(feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST) * 7e-5))
+    //   , 3000);
+    // });
+
+});

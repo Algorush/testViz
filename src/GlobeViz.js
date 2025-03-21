@@ -52,17 +52,13 @@ const GlobeViz = ({ data, config }) => {
           return res.json();
         })
         .then(countriesGeojson => {
-          console.log("GeoJSON загружен:", countriesGeojson);
-          if (!countriesGeojson.features || !Array.isArray(countriesGeojson.features)) {
-            throw new Error("Неверный формат GeoJSON (нет features)");
-          }
-      
-          const firstFeature = countriesGeojson.features[0];
-          console.log("Первая геометрия:", firstFeature.geometry);
-      
+          const validGeojson = countriesGeojson.features.filter(f =>
+            f.geometry !== null && (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon')
+          );
+
           globe
-            .polygonsData(countriesGeojson.features)
-            .polygonGeojsonGeometry(d => d.geometry || console.error("Ошибка: нет geometry в", d))
+            .polygonsData(validGeojson.features)
+            .polygonGeoJsonGeometry(d => d.geometry)
             .polygonCapColor(() => 'rgba(0, 0, 0, 0.2)') // Slightly more visible
             .polygonSideColor(() => 'rgba(0, 0, 0, 0.4)')
             .polygonStrokeColor(() => '#666666')

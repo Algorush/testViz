@@ -47,9 +47,7 @@ const GlobeViz = ({ data, config }) => {
         globe.pointRadius(d => sizeScale(parseFloat(d[config.sizeField])));
       }
 
-      const globeEl = globe.renderer().domElement.parentNode;
-
-      globeEl.addEventListener('click', event => {
+      document.addEventListener('click', event => {
           if (!event.target.closest('canvas')) return;
           if (!selectedCountry) return;
           resetView();

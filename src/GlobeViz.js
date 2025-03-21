@@ -23,7 +23,7 @@ const GlobeViz = ({ data, config }) => {
 
       // Initialize globe
       globe = Globe({ contextOptions: { webgl2: false } })
-        .globeImageUrl('/images/earth-day.png')
+        //.globeImageUrl('/images/earth-day.png')
         .backgroundColor('#ffffff')
         .pointOfView({ lat: 30, lng: -90, altitude: 2 })
         .pointsData(data)
@@ -59,10 +59,9 @@ const GlobeViz = ({ data, config }) => {
           globe
             .polygonsData(validGeojson)
             .polygonGeoJsonGeometry(d => d.geometry)
-            .polygonCapColor(() => 'rgba(0, 0, 0, 0.2)') // Slightly more visible
-            .polygonSideColor(() => 'rgba(0, 0, 0, 0.4)')
-            .polygonStrokeColor(() => '#666666')
-            .polygonAltitude(0.01) // Minimal elevation
+            .polygonCapColor(() => 'rgb(240, 240, 240)')
+            .polygonSideColor(() => 'rgb(200, 200, 200)')
+            .polygonStrokeColor(() => '#aaa')
             .onPolygonClick((polygon) => {
               const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
               applyTableauFilter(countryName);

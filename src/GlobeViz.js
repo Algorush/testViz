@@ -14,6 +14,7 @@ const GlobeViz = ({ data, config }) => {
     }
 
     let globe;
+    let isZoomedIn = false; 
     try {
       const testCanvas = document.createElement('canvas');
       const gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
@@ -67,8 +68,15 @@ const GlobeViz = ({ data, config }) => {
               const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
               const center = getPolygonCenter(polygon.geometry);
 
-              globe.controls().autoRotate = false;
-              globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: 0.7 }, 2000);
+              if (!isZoomedIn) {
+                globe.controls().autoRotate = false;
+                globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: 0.7 }, 2000);
+              } else {
+                  globe.controls().autoRotate = true;
+                  const currentView = globe.pointOfView();
+                  globe.pointOfView({ ...currentView, altitude: 3 }, 1000);
+              }
+              isZoomedIn = !isZoomedIn;
 
               applyTableauFilter(countryName);
             });
@@ -83,7 +91,7 @@ const GlobeViz = ({ data, config }) => {
 
       // rotation
       const controls = globe.controls();
-      controls.autoRotate = true; // Включаем авто-вращение
+      controls.autoRotate = true;
       controls.autoRotateSpeed = 1.2; 
 
       // Resize handler

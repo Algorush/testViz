@@ -39,7 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
             //.polygonAltitude(1)
             .onPolygonClick((polygon) => {
                 const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
-                console.log("Выбрана страна:", countryName);
+                const center = getPolygonCenter(polygon.geometry);
+
+                globe.controls().autoRotate = false;
+                globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: 0.7 }, 2000);
+  
                 applyTableauFilter(countryName);
             })
             //.pointAltitude(0) // Flat on surface
@@ -52,8 +56,30 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Ошибка загрузки полигонов:', err);
     });
     
+    function getPolygonCenter(geometry) {
+        let latSum = 0, lngSum = 0, count = 0;
+
+        if (geometry.type === 'Polygon') {
+            geometry.coordinates[0].forEach(([lng, lat]) => {
+                latSum += lat;
+                lngSum += lng;
+                count++;
+            });
+        } else if (geometry.type === 'MultiPolygon') {
+            geometry.coordinates.forEach(polygon => {
+                polygon[0].forEach(([lng, lat]) => {
+                    latSum += lat;
+                    lngSum += lng;
+                    count++;
+                });
+            });
+        }
+
+        return { lat: latSum / count, lng: lngSum / count };
+    }
+
     function applyTableauFilter(country) {
-    alert("Фильтр по стране: " + country);
+    //alert("Фильтр по стране: " + country);
     }
 
 

@@ -31,7 +31,7 @@ const GlobeViz = ({ data, config }) => {
         .pointLng('lng')
         .pointRadius(0.3) // Flat circle size
         .pointColor(() => '#ff6200') // Orange circles
-        .pointAltitude(0.02) // Flat on surface
+        .pointAltitude(0.011) // Flat on surface
         .pointsMerge(false); // Disable merging for distinct circles
 
       // Optional size scaling
@@ -65,6 +65,11 @@ const GlobeViz = ({ data, config }) => {
             .polygonLabel(d => d.properties.ADMIN)
             .onPolygonClick((polygon) => {
               const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
+              const center = getPolygonCenter(polygon.geometry);
+
+              globe.controls().autoRotate = false;
+              globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: 0.7 }, 2000);
+
               applyTableauFilter(countryName);
             });
         })
@@ -106,6 +111,28 @@ const GlobeViz = ({ data, config }) => {
       containerRef.current.innerHTML = `<p>Error rendering globe: ${error.message}</p>`;
     }
   }, [data, config]);
+
+  function getPolygonCenter(geometry) {
+    let latSum = 0, lngSum = 0, count = 0;
+
+    if (geometry.type === 'Polygon') {
+        geometry.coordinates[0].forEach(([lng, lat]) => {
+            latSum += lat;
+            lngSum += lng;
+            count++;
+        });
+    } else if (geometry.type === 'MultiPolygon') {
+        geometry.coordinates.forEach(polygon => {
+            polygon[0].forEach(([lng, lat]) => {
+                latSum += lat;
+                lngSum += lng;
+                count++;
+            });
+        });
+    }
+
+    return { lat: latSum / count, lng: lngSum / count };
+}
 
   const applyTableauFilter = (countryName) => {
     if (typeof tableau === 'undefined') {

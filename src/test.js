@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const globe = new Globe(document.getElementById('globe-container'))
-    .globeMaterial(new THREE.MeshBasicMaterial({
-        color: 0xdddddd, // Светло-серый цвет шара
-      }))
     .backgroundColor('#f5f5f5') // Светлый фон
     .pointOfView({ altitude: 3 }, 3000)
     .polygonCapColor(() => 'rgba(240, 240, 240, 0.9)') // Матовые полигоны
@@ -22,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // renderer.shadowMap.enabled = true;
 
     // Загрузка GeoJSON
-    fetch('/countries.json')
+    fetch('/dist/countries.json')
     .then(res => {
         if (!res.ok) throw new Error('Ошибка загрузки countries.geojson');
         return res.json();
@@ -38,12 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Отображаем полигоны на глобусе
         globe
             .polygonsData(validGeojson)
-            .polygonGeoJsonGeometry(d => d.geometry)
+            //.polygonGeoJsonGeometry(d => d.geometry)
             .polygonAltitude(0.01)
             .onPolygonClick((polygon) => {
                 const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
                 console.log("Выбрана страна:", countryName);
                 applyTableauFilter(countryName);
+            })
+            .onPolygonHover((polygon) => {
+                // Изменение цвета полигона при наведении
+                const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
+                globe.polygonCapColor(() => 'rgba(255, 165, 0, 0.7)'); // Оранжевый цвет
             });
     })
     .catch(err => {
@@ -55,7 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-
+    const controls = globe.controls();
+    controls.autoRotate = true; // Включаем авто-вращение
+    controls.autoRotateSpeed = 1.2; 
 
     // const world = new Globe(document.getElementById('globe-container'))
     //   .globeImageUrl('//cdn.jsdelivr.net/npm/three-globe/example/img/earth-dark.jpg')

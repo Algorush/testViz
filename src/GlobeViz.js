@@ -76,15 +76,15 @@ const GlobeViz = ({ data, config }) => {
       globeEl.current = globe;
 
       // Faster rotation
-      let currentLng = -90;
-      const rotationInterval = setInterval(() => {
-        currentLng = (currentLng + 2) % 360; // 20°/s
-        globe.pointOfView({
-          lat: 30,
-          lng: currentLng,
-          altitude: 2
-        });
-      }, 100);
+      // let currentLng = -90;
+      // const rotationInterval = setInterval(() => {
+      //   currentLng = (currentLng + 2) % 360; // 20°/s
+      //   globe.pointOfView({
+      //     lat: 30,
+      //     lng: currentLng,
+      //     altitude: 2
+      //   });
+      // }, 100);
 
       // Resize handler
       const handleResize = () => {

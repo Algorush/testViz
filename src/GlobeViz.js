@@ -31,7 +31,7 @@ const GlobeViz = ({ data, config }) => {
         .pointLng('lng')
         .pointRadius(0.3) // Flat circle size
         .pointColor(() => '#ff6200') // Orange circles
-        .pointAltitude(2) // Flat on surface
+        .pointAltitude(0.02) // Flat on surface
         .pointsMerge(false); // Disable merging for distinct circles
 
       // Optional size scaling

@@ -26,7 +26,7 @@ const GlobeViz = ({ data, config }) => {
       }
 
       // Initialize globe
-      globe = new Globe({ contextOptions: { webgl2: false } })
+      var globe = new Globe(containerRef.current)
         .showAtmosphere(false)
         .backgroundColor('#f5f5f5')
         .pointOfView({ lat: 30, lng: -90, altitude: 2 })
@@ -114,7 +114,7 @@ const GlobeViz = ({ data, config }) => {
         });
 
       // Mount the globe
-      globe(containerRef.current);
+      //globe();
       globeEl.current = globe;
 
       // rotation

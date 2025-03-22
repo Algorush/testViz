@@ -26,7 +26,7 @@ const GlobeViz = ({ data, config }) => {
       }
 
       // Initialize globe
-      globe = Globe({ contextOptions: { webgl2: false } })
+      globe = new Globe({ contextOptions: { webgl2: false } })
         .showAtmosphere(false)
         .backgroundColor('#f5f5f5')
         .pointOfView({ lat: 30, lng: -90, altitude: 2 })

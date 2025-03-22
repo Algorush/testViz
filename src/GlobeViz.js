@@ -13,9 +13,11 @@ const GlobeViz = ({ data, config }) => {
       return;
     }
 
-    let globe;
     let isZoomedIn = false; 
     let selectedCountry = null;
+    let countryName = null;
+    let hoveredPolygon = null;
+
     try {
       const testCanvas = document.createElement('canvas');
       const gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
@@ -49,7 +51,7 @@ const GlobeViz = ({ data, config }) => {
 
       document.addEventListener('click', event => {
           if (!event.target.closest('canvas')) return;
-          if (!selectedCountry) return;
+          if (countryName) return;
           resetView();
       });
 
@@ -77,21 +79,35 @@ const GlobeViz = ({ data, config }) => {
             .polygonSideColor(() => 'rgb(200, 200, 200)')
             .polygonStrokeColor(() => '#aaa')
             .polygonLabel(d => d.properties.ADMIN)
-            .onPolygonClick((polygon) => {
-              const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
+            .onPolygonClick((polygon, event) => {
+              event.stopPropagation();
+              countryName = polygon.properties.ADMIN || polygon.properties.NAME;
               const center = getPolygonCenter(polygon.geometry);
 
-              if (!isZoomedIn || (selectedCountry !== countryName)) {
-                selectedCountry = countryName;
-                globe.controls().autoRotate = false;
-                globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: 0.7 }, 2000);
-              } else if (selectedCountry === countryName) {
+              if (selectedCountry !== countryName) {
+                  selectedCountry = countryName;
+                  isZoomedIn = true;
+                  globe.controls().autoRotate = false;
+                  globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: 0.7 }, 2000);
+              } else if (selectedCountry === countryName && isZoomedIn) {
+                  isZoomedIn = false;
+                  selectedCountry = null;
                   resetView();
               }
-              isZoomedIn = !isZoomedIn;
-
+              countryName = null;
               applyTableauFilter(countryName);
-            });
+            })
+            .onPolygonHover((polygon) => {
+                if (hoveredPolygon) {
+                  hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgba(240, 240, 240, 0.9)';
+                }
+            
+                hoveredPolygon = polygon;
+            
+                globe
+                  .polygonCapColor(d => (d === polygon ? 'rgba(255, 165, 0, 0.9)' : d.__previousColor || 'rgba(240, 240, 240, 0.9)'))
+                  .polygonsTransitionDuration(200);
+              })
         })
         .catch(err => {
           console.error('Error loading polygons:', err);

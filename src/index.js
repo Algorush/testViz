@@ -57,9 +57,8 @@ function App() {
   // Fetch worksheet names on load
   React.useEffect(() => {
     if (typeof tableau === 'undefined' || !tableau.extensions.worksheetContent) return;
-    const dashboard = tableau.extensions.worksheetContent.dashboard;
-    const worksheets = dashboard.worksheets;
-    setWorksheetNames(worksheets.map(ws => ws.name));
+    const worksheet = tableau.extensions.worksheetContent.worksheet;
+    //setWorksheetNames(worksheet => worksheet.name);
   }, []);
 
   // Handle worksheet selection and fetch fields
@@ -72,8 +71,7 @@ function App() {
 
     if (!name) return;
 
-    const dashboard = tableau.extensions.worksheetContent.dashboard;
-    const worksheet = dashboard.worksheets.find(ws => ws.name === name);
+    const worksheet = tableau.extensions.worksheetContent.worksheet;
     if (worksheet) {
       worksheet.getSummaryDataAsync({ maxRows: 1 }).then(dataTable => {
         const dims = dataTable.columns.filter(col => col.dataType === 'string');
@@ -93,8 +91,7 @@ function App() {
       return;
     }
 
-    const dashboard = tableau.extensions.worksheetContent.dashboard;
-    const worksheet = dashboard.worksheets.find(ws => ws.name === selectedWorksheet);
+    const worksheet = tableau.extensions.worksheetContent.worksheet;
     
     if (worksheet) {
       worksheet.getSummaryDataAsync().then(dataTable => {

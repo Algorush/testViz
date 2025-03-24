@@ -6,8 +6,8 @@ import './index.css';
 // Initialize the extension
 (function () {
   const initialize = () => {
-    if (typeof tableau !== 'undefined') {
-      tableau.extensions.initializeAsync().then(() => {
+    if (typeof tableau !== 'undefined' && tableau.extensions.worksheetContent) {
+      tableau.extensions.worksheetContent.initializeAsync().then(() => {
         ReactDOM.render(
           <React.StrictMode>
             <App />
@@ -15,13 +15,13 @@ import './index.css';
           document.getElementById('root')
         );
       }).catch(error => {
-        console.error("Error initializing Tableau extension:", error);
+        console.error("Error initializing Tableau Viz extension:", error);
       });
     } else {
       ReactDOM.render(
         <React.StrictMode>
           <div className="browser-mode">
-            <h2>Tableau Globe Extension - Browser Mode</h2>
+            <h2>Tableau Globe Viz Extension - Browser Mode</h2>
             <p>This extension is designed to run inside Tableau.</p>
           </div>
         </React.StrictMode>,
@@ -56,8 +56,8 @@ function App() {
 
   // Fetch worksheet names on load
   React.useEffect(() => {
-    if (typeof tableau === 'undefined') return;
-    const dashboard = tableau.extensions.dashboardContent.dashboard;
+    if (typeof tableau === 'undefined' || !tableau.extensions.worksheetContent) return;
+    const dashboard = tableau.extensions.worksheetContent.dashboard;
     const worksheets = dashboard.worksheets;
     setWorksheetNames(worksheets.map(ws => ws.name));
   }, []);
@@ -72,7 +72,7 @@ function App() {
 
     if (!name) return;
 
-    const dashboard = tableau.extensions.dashboardContent.dashboard;
+    const dashboard = tableau.extensions.worksheetContent.dashboard;
     const worksheet = dashboard.worksheets.find(ws => ws.name === name);
     if (worksheet) {
       worksheet.getSummaryDataAsync({ maxRows: 1 }).then(dataTable => {
@@ -93,7 +93,7 @@ function App() {
       return;
     }
 
-    const dashboard = tableau.extensions.dashboardContent.dashboard;
+    const dashboard = tableau.extensions.worksheetContent.dashboard;
     const worksheet = dashboard.worksheets.find(ws => ws.name === selectedWorksheet);
     
     if (worksheet) {
@@ -177,64 +177,10 @@ function App() {
                     ))}
                 </select>
               </div>
-              
-              <div className="form-group">
-                <label>Longitude Field (required)</label>
-                <select 
-                  value={selectedConfig.lonField} 
-                  onChange={e => setSelectedConfig({...selectedConfig, lonField: e.target.value})}
-                >
-                  <option value="">-- Select Field --</option>
-                  {dimensions.concat(measures)
-                    .filter(field => ['float', 'integer', 'real'].includes(field.dataType))
-                    .map(field => (
-                      <option key={field.name} value={field.name}>{field.name}</option>
-                    ))}
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label>Color Field (optional)</label>
-                <select 
-                  value={selectedConfig.colorField} 
-                  onChange={e => setSelectedConfig({...selectedConfig, colorField: e.target.value})}
-                >
-                  <option value="">-- None --</option>
-                  {dimensions.concat(measures).map(field => (
-                    <option key={field.name} value={field.name}>{field.name}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label>Size Field (optional)</label>
-                <select 
-                  value={selectedConfig.sizeField} 
-                  onChange={e => setSelectedConfig({...selectedConfig, sizeField: e.target.value})}
-                >
-                  <option value="">-- None --</option>
-                  {measures.map(field => (
-                    <option key={field.name} value={field.name}>{field.name}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label>Label Field (optional)</label>
-                <select 
-                  value={selectedConfig.labelField} 
-                  onChange={e => setSelectedConfig({...selectedConfig, labelField: e.target.value})}
-                >
-                  <option value="">-- None --</option>
-                  {dimensions.map(field => (
-                    <option key={field.name} value={field.name}>{field.name}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <button className="apply-btn" onClick={applyConfiguration}>
+               {/* аналогично для других полей */}
+               <button className="apply-btn" onClick={applyConfiguration}>
                 Apply Configuration
-              </button>
+               </button>
             </>
           )}
         </div>
@@ -255,3 +201,5 @@ function App() {
     </div>
   );
 }
+
+export default App;

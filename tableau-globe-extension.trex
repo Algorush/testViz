@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest manifest-version="0.1" xmlns="http://www.tableau.com/xml/extension_manifest">
-  <dashboard-extension id="com.example.extensions.globe-gl" extension-version="1.0.0">
+  <worksheet-extension id="com.example.extensions.globe-gl" extension-version="1.0.0">
     <default-locale>en_US</default-locale>
     <name resource-id="name">Globe.gl Visualization</name>
     <description>A flexible 3D globe visualization extension</description>
@@ -13,7 +13,7 @@
     <permissions>
       <permission>full data</permission>
     </permissions>
-  </dashboard-extension>
+  </worksheet-extension>
   <resources>
     <resource id="name">
       <text locale="en_US">Globe.gl Visualization</text>

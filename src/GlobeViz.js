@@ -99,13 +99,13 @@ const GlobeViz = ({ data, config }) => {
             })
             .onPolygonHover((polygon) => {
                 if (hoveredPolygon) {
-                  hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgba(240, 240, 240, 0.9)';
+                  hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgb(240, 240, 240)';
                 }
             
                 hoveredPolygon = polygon;
             
                 globe
-                  .polygonCapColor(d => (d === polygon ? 'rgba(255, 165, 0, 0.9)' : d.__previousColor || 'rgba(240, 240, 240, 0.9)'))
+                  .polygonCapColor(d => (d === polygon ? 'rgb(255, 165, 0)' : d.__previousColor || 'rgb(240, 240, 240)'))
                   .polygonsTransitionDuration(200);
               })
         })

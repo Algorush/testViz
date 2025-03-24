@@ -6,8 +6,8 @@ import './index.css';
 // Initialize the extension
 (function () {
   const initialize = () => {
-    if (typeof tableau !== 'undefined' && tableau.extensions.worksheetContent) {
-      tableau.extensions.worksheetContent.initializeAsync().then(() => {
+    if (typeof tableau !== 'undefined') {
+      tableau.extensions.initializeAsync().then(() => {
         ReactDOM.render(
           <React.StrictMode>
             <App />

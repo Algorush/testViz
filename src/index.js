@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import GlobeViz from './GlobeViz';
 import './index.css';
 
-// Initialize the extension
 (function () {
   const initialize = () => {
     if (typeof tableau !== 'undefined') {
@@ -37,109 +36,35 @@ import './index.css';
   }
 })();
 
-// Main App component
 function App() {
-  const [worksheetNames, setWorksheetNames] = React.useState([]);
-  const [selectedWorksheet, setSelectedWorksheet] = React.useState('');
-  const [dimensions, setDimensions] = React.useState([]);
-  const [measures, setMeasures] = React.useState([]);
-  const [selectedConfig, setSelectedConfig] = React.useState({
-    latField: '',
-    lonField: '',
-    colorField: '',
-    sizeField: '',
-    labelField: '',
-    worksheetName: ''
+  const [data, setData] = useState([]);
+  const [selectedWorksheet, setSelectedWorksheet] = useState(null);
+  const [config, setConfig] = useState({
+    lat: '',
+    lon: '',
+    location: '',
+    color: '',
+    size: ''
   });
-  const [data, setData] = React.useState([]);
-  const [isConfigured, setIsConfigured] = React.useState(false);
+  const [isConfigured, setIsConfigured] = useState(false);
 
-  // Fetch worksheet names on load
-  React.useEffect(() => {
-    if (typeof tableau === 'undefined' || !tableau.extensions.worksheetContent) return;
-    const worksheet = tableau.extensions.worksheetContent.worksheet;
-    //setWorksheetNames(worksheet => worksheet.name);
+  useEffect(() => {
+    tableau.extensions.initializeAsync().then(() => {
+      let dashboard = tableau.extensions.dashboardContent.dashboard;
+      setSelectedWorksheet(dashboard.worksheets[0]); // Выбираем первый лист по умолчанию
+    });
   }, []);
 
-  // Handle worksheet selection and fetch fields
-  const handleWorksheetChange = (e) => {
-    const name = e.target.value;
-    setSelectedWorksheet(name);
-    setSelectedConfig({ ...selectedConfig, worksheetName: name });
-    setDimensions([]); // Reset fields
-    setMeasures([]);
-
-    if (!name) return;
-
-    const worksheet = tableau.extensions.worksheetContent.worksheet;
-    if (worksheet) {
-      worksheet.getSummaryDataAsync({ maxRows: 1 }).then(dataTable => {
-        const dims = dataTable.columns.filter(col => col.dataType === 'string');
-        const meas = dataTable.columns.filter(col => ['float', 'integer', 'real'].includes(col.dataType));
-        setDimensions(dims.map(col => ({ name: col.fieldName, dataType: col.dataType })));
-        setMeasures(meas.map(col => ({ name: col.fieldName, dataType: col.dataType })));
-      }).catch(err => {
-        console.error('Error fetching worksheet fields:', err);
-      });
-    }
+  const handleChange = (e) => {
+    setConfig({ ...config, [e.target.name]: e.target.value });
   };
 
-  // Apply configuration and fetch data
   const applyConfiguration = () => {
-    if (!selectedWorksheet || !selectedConfig.latField || !selectedConfig.lonField) {
-      alert('Please select a worksheet and at least latitude and longitude fields');
+    if (!config.lat || !config.lon || !config.location) {
+      alert('Please enter Latitude, Longitude, and Location.');
       return;
     }
-
-    const worksheet = tableau.extensions.worksheetContent.worksheet;
-    
-    if (worksheet) {
-      worksheet.getSummaryDataAsync().then(dataTable => {
-        const formattedData = dataTable.data.map(row => {
-          const rowData = {};
-          
-          // Map each column to its index for faster lookup
-          const columnMap = {};
-          dataTable.columns.forEach((col, idx) => {
-            columnMap[col.fieldName] = idx;
-          });
-          
-          // Add lat/lon fields (required)
-          const latIdx = columnMap[selectedConfig.latField];
-          const lonIdx = columnMap[selectedConfig.lonField];
-          rowData.lat = parseFloat(row[latIdx].value);
-          rowData.lng = parseFloat(row[lonIdx].value);
-          
-          // Add optional fields if selected
-          if (selectedConfig.colorField) {
-            const colorIdx = columnMap[selectedConfig.colorField];
-            rowData.color = row[colorIdx].value;
-          }
-          
-          if (selectedConfig.sizeField) {
-            const sizeIdx = columnMap[selectedConfig.sizeField];
-            rowData.size = parseFloat(row[sizeIdx].value);
-          }
-          
-          if (selectedConfig.labelField) {
-            const labelIdx = columnMap[selectedConfig.labelField];
-            rowData.label = row[labelIdx].value;
-          }
-          
-          // Add all original data for tooltips and future use
-          dataTable.columns.forEach((col, idx) => {
-            rowData[col.fieldName] = row[idx].value;
-          });
-          
-          return rowData;
-        });
-        
-        setData(formattedData);
-        setIsConfigured(true);
-      }).catch(err => {
-        console.error('Error fetching data:', err);
-      });
-    }
+    setIsConfigured(true);
   };
 
   return (
@@ -149,50 +74,36 @@ function App() {
           <h2>Configure Globe Visualization</h2>
           
           <div className="form-group">
-            <label>Select Worksheet</label>
-            <select value={selectedWorksheet} onChange={handleWorksheetChange}>
-              <option value="">-- Select Worksheet --</option>
-              {worksheetNames.map(name => (
-                <option key={name} value={name}>{name}</option>
-              ))}
-            </select>
+            <label>Latitude (required)</label>
+            <input type="text" name="lat" value={config.lat} onChange={handleChange} />
+          </div>
+
+          <div className="form-group">
+            <label>Longitude (required)</label>
+            <input type="text" name="lon" value={config.lon} onChange={handleChange} />
+          </div>
+
+          <div className="form-group">
+            <label>Country/State/City (required)</label>
+            <input type="text" name="location" value={config.location} onChange={handleChange} />
+          </div>
+
+          <div className="form-group">
+            <label>Color</label>
+            <input type="text" name="color" value={config.color} onChange={handleChange} />
+          </div>
+
+          <div className="form-group">
+            <label>Size</label>
+            <input type="text" name="size" value={config.size} onChange={handleChange} />
           </div>
           
-          {selectedWorksheet && (
-            <>
-              <div className="form-group">
-                <label>Latitude Field (required)</label>
-                <select 
-                  value={selectedConfig.latField} 
-                  onChange={e => setSelectedConfig({...selectedConfig, latField: e.target.value})}
-                >
-                  <option value="">-- Select Field --</option>
-                  {dimensions.concat(measures)
-                    .filter(field => ['float', 'integer', 'real'].includes(field.dataType))
-                    .map(field => (
-                      <option key={field.name} value={field.name}>{field.name}</option>
-                    ))}
-                </select>
-              </div>
-               {/* аналогично для других полей */}
-               <button className="apply-btn" onClick={applyConfiguration}>
-                Apply Configuration
-               </button>
-            </>
-          )}
+          <button className="apply-btn" onClick={applyConfiguration}>Apply Configuration</button>
         </div>
       ) : (
         <div className="viz-container">
-          <button 
-            className="back-btn" 
-            onClick={() => setIsConfigured(false)}
-          >
-            Back to Configuration
-          </button>
-          <GlobeViz 
-            data={data} 
-            config={selectedConfig} 
-          />
+          <button className="back-btn" onClick={() => setIsConfigured(false)}>Back to Configuration</button>
+          <GlobeViz data={config} />
         </div>
       )}
     </div>

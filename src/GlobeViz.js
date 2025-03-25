@@ -176,8 +176,7 @@ const GlobeViz = ({ data, config }) => {
       return;
     }
 
-    const dashboard = tableau.extensions.dashboardContent.dashboard;
-    const worksheet = dashboard.worksheets.find(ws => ws.name === config.worksheetName);
+    const worksheet = tableau.extensions.worksheetContent.worksheet;
     if (worksheet) {
       worksheet.applyFilterAsync(
         'Country', // Adjust if your field name differs

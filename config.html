@@ -27,7 +27,7 @@
     // running in a popup is that the popup extension must use the method
     // initializeDialogAsync instead of initializeAsync for initialization.
     // This has no affect on the development of the extension but is used internally.
-    tableau.extensions.initializeDialogAsync({configure: configure}).then(payload => {
+    tableau.extensions.initializeDialogAsync().then(payload => {
         const initialConfig = JSON.parse(payload);
         document.getElementById("latitudeField").value = initialConfig.latField;
         document.getElementById("longitudeField").value = initialConfig.lonField;

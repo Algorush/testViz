@@ -23,13 +23,7 @@ window.onload = () => {
         updateGlobe();
       })
       .catch(err => {
-        if (err instanceof tableau.TableauError) {
-          if (err.errorCode === tableau.ErrorCodes.DialogClosedByUser) {
-            console.log("Dialog was closed by the user.");
-          }
-        } else {
-          console.error("Error opening config dialog:", err);
-        }
+        console.error("Error opening config dialog:", err);
       });
     }
   };

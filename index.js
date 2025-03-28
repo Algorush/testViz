@@ -74,7 +74,7 @@ function renderGlobe(data, config) {
     window.globeInstance.updateData(data, config);
   } else {
     const globeContainer = document.getElementById("globeViz");
-    window.globeInstance = ReactDOM.render(React.createElement(Globe, { data, config }), globeContainer);
+    window.globeInstance = ReactDOM.createRoot(globeContainer).render(React.createElement(Globe, { data, config }));
   }
 }
 

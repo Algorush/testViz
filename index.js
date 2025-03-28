@@ -12,7 +12,7 @@ let viz = null;
 window.onload = () => {
   tableau.extensions.initializeAsync({configure: configure}).then(() => {
       console.log("Tableau Extensions API initialized");
-      selectedWorksheet = tableau.extensions.worksheetApi.activeWorksheet;
+      selectedWorksheet = tableau.extensions.worksheetContent.worksheet;
       setupDataChangeListener();
   }).catch((err) => {
       console.error("Error initializing:", err);

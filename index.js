@@ -10,7 +10,7 @@ let isConfigured = false;
 let viz = null;
 
 window.onload = () => {
-  tableau.extensions.initializeAsync({configure: configure}).then(() => {
+  tableau.extensions.initializeAsync({"configure": configure}).then(() => {
       console.log("Tableau Extensions API initialized");
       selectedWorksheet = tableau.extensions.worksheetContent.worksheet;
       setupDataChangeListener();

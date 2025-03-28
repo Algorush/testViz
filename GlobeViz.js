@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Globe from 'globe.gl';
-import { scaleLinear, scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+// import { scaleLinear, scaleOrdinal } from 'd3-scale';
+// import { schemeCategory10 } from 'd3-scale-chromatic';
 
 const GlobeViz = ({ data, config }) => {
   const globeEl = useRef();
@@ -43,9 +43,9 @@ const GlobeViz = ({ data, config }) => {
         const sizes = data.map(d => parseFloat(d[config.sizeField]));
         const minSize = Math.min(...sizes);
         const maxSize = Math.max(...sizes);
-        const sizeScale = scaleLinear()
-          .domain([minSize, maxSize])
-          .range([0.2, 0.8]);
+        // const sizeScale = scaleLinear()
+        //   .domain([minSize, maxSize])
+        //   .range([0.2, 0.8]);
         globe.pointRadius(d => sizeScale(parseFloat(d[config.sizeField])));
       }
 

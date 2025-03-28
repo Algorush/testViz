@@ -10,7 +10,30 @@ let isConfigured = false;
 let viz = null;
 
 $(document).ready(function () {
-  tableau.extensions.initializeAsync({"configure": configure}).then(() => {
+  const contextMenus = {
+    "configure": () => {
+      const popupUrl = 'config.html';
+      
+      tableau.extensions.ui.displayDialogAsync(popupUrl, JSON.stringify(selectedConfig), { 
+        height: 400, 
+        width: 400 
+      })
+      .then(payload => {
+        selectedConfig = JSON.parse(payload);
+        updateGlobe();
+      })
+      .catch(err => {
+        if (err instanceof tableau.TableauError) {
+          if (err.errorCode === tableau.ErrorCodes.DialogClosedByUser) {
+            console.log("Dialog was closed by the user.");
+          }
+        } else {
+          console.error("Error opening config dialog:", err);
+        }
+      });
+    }
+  };
+  tableau.extensions.initializeAsync(contextMenus).then(() => {
       console.log("Tableau Extensions API initialized");
       selectedWorksheet = tableau.extensions.worksheetContent.worksheet;
       setupDataChangeListener();
@@ -18,18 +41,6 @@ $(document).ready(function () {
       console.error("Error initializing:", err);
   });
 });
-
-function configure() {
-  const popupUrl = 'config.html';
-  tableau.extensions.ui.displayDialogAsync(popupUrl, JSON.stringify(selectedConfig), { height: 400, width: 400 })
-    .then(payload => {
-        selectedConfig = JSON.parse(payload);
-        updateGlobe();
-    })
-        .catch(err => {
-        console.error("Error opening config dialog:", err);
-    });
-}
 
 function updateGlobe() {
   if (!selectedWorksheet) {

@@ -9,7 +9,7 @@ let selectedConfig = {
 let isConfigured = false;
 let viz = null;
 
-window.onload = () => {
+$(document).ready(function () {
   tableau.extensions.initializeAsync({"configure": configure}).then(() => {
       console.log("Tableau Extensions API initialized");
       selectedWorksheet = tableau.extensions.worksheetContent.worksheet;
@@ -17,7 +17,7 @@ window.onload = () => {
   }).catch((err) => {
       console.error("Error initializing:", err);
   });
-};
+});
 
 function configure() {
   const popupUrl = 'config.html';

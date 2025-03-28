@@ -9,7 +9,7 @@ let selectedConfig = {
 let isConfigured = false;
 let viz = null;
 
-$(document).ready(function () {
+window.onload = () => {
   const contextMenus = {
     "configure": () => {
       const popupUrl = 'config.html';
@@ -40,7 +40,7 @@ $(document).ready(function () {
   }).catch((err) => {
       console.error("Error initializing:", err);
   });
-});
+}
 
 function updateGlobe() {
   if (!selectedWorksheet) {

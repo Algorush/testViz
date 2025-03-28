@@ -3,29 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Globe.gl Viz Extension</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./index.css">
     <!-- Load Tableau Extensions API -->
     <script src="https://unpkg.com/@tableau/extensions-api/dist/tableau.extensions.1.latest.js"></script>
     <!-- Load Three.js and Globe.gl -->
     <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
     <script src="https://unpkg.com/globe.gl@2.27.0/dist/globe.gl.min.js"></script>
     <!-- Load your custom script -->
-    <script src="script.js" defer></script>
+    <script src="./index.js" defer></script>
 </head>
 <body>
-    <div id="container">
-        <div id="configPanel">
-            <h3>Configure Globe</h3>
-            <label for="latField">Latitude Field:</label>
-            <select id="latField"></select><br>
-            <label for="lngField">Longitude Field:</label>
-            <select id="lngField"></select><br>
-            <label for="colorField">Color Field:</label>
-            <select id="colorField"></select><br>
-            <label for="autoRotate">Auto Rotate:</label>
-            <input type="checkbox" id="autoRotate" checked>
-        </div>
-        <div id="globeViz"></div>
-    </div>
+    <div id="globeViz"></div>
+
 </body>
 </html>

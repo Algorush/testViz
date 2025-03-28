@@ -10,15 +10,7 @@ let isConfigured = false;
 let viz = null;
 
 window.onload = () => {
-  tableau.extensions.initializeAsync().then(() => {
-    let dashboard = tableau.extensions.dashboardContent.dashboard;
-    if (dashboard.worksheets.length > 0) {
-      selectedWorksheet = dashboard.worksheets[0];
-      setupDataChangeListener();
-    }
-  }).catch(err => {
-    console.error("Error initializing Tableau extension:", err);
-  });
+
 };
 
 function applyConfiguration() {
@@ -67,7 +59,7 @@ function applyConfiguration() {
 document.getElementById("applyConfigButton").addEventListener("click", applyConfiguration);
 
 function renderGlobeInWorksheet(data, config) {
-  const vizContainer = document.getElementById("vizContainer");
+  const vizContainer = document.getElementById("globeViz");
   if (viz) {
     viz.dispose();
   }
@@ -82,3 +74,22 @@ function setupDataChangeListener() {
     applyConfiguration();
   });
 }
+
+let worksheet = null;
+
+
+
+document.getElementById("saveButton").addEventListener("click", () => {
+    const config = {
+        latField: document.getElementById("latField").value,
+        lonField: document.getElementById("lonField").value,
+        colorField: document.getElementById("colorField").value,
+        sizeField: document.getElementById("sizeField").value,
+        labelField: document.getElementById("labelField").value
+    };
+    tableau.extensions.ui.closeDialog(JSON.stringify(config));
+});
+
+document.getElementById("cancelButton").addEventListener("click", () => {
+    tableau.extensions.ui.closeDialog("");
+});

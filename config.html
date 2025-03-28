@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Configure Fields</h2>
+    <label for="latField">Latitude Field:</label>
+    <select id="latField"></select>
+    
+    <label for="lonField">Longitude Field:</label>
+    <select id="lonField"></select>
+    
+    <label for="colorField">Color Field:</label>
+    <select id="colorField"></select>
+    
+    <label for="sizeField">Size Field:</label>
+    <select id="sizeField"></select>
+    
+    <label for="labelField">Label Field:</label>
+    <select id="labelField"></select>
+
+</body>
+<script>
+  $(document).ready(function () {
+    // The only difference between an extension in a dashboard and an extension
+    // running in a popup is that the popup extension must use the method
+    // initializeDialogAsync instead of initializeAsync for initialization.
+    // This has no affect on the development of the extension but is used internally.
+    tableau.extensions.initializeAsync({'configure': configure}).then(() => {
+        selectedWorksheet = tableau.extensions.worksheetApi.activeWorksheet;
+        populateFields();
+    }).catch(err => {
+        console.error("Error initializing Tableau extension:", err);
+    });
+  }); 
+
+  function closeDialog() {
+   // Save the settings with tableau.extensions.settings.saveAsync()
+   // Or pass the new configuration setting in the close payload
+     tableau.extensions.ui.closeDialog('NewInterval');
+     console.log("Settings saved");
+    }
+
+  function configure() {
+    const popupUrl = 'config.html';
+    tableau.extensions.ui.displayDialogAsync(popupUrl, JSON.stringify(selectedConfig), { height: 400, width: 400 })
+        .then(payload => {
+            selectedConfig = JSON.parse(payload);
+            updateGlobe();
+        })
+            .catch(err => {
+            console.error("Error opening config dialog:", err);
+        });
+  }
+
+  function updateGlobe() {
+    if (!selectedWorksheet) {
+        console.error("No worksheet selected");
+        return;
+    }
+
+    selectedWorksheet.getSummaryDataAsync().then(dataTable => {
+        const formattedData = dataTable.data.map(row => {
+        const columnMap = {};
+        dataTable.columns.forEach((col, idx) => {
+            columnMap[col.fieldName] = idx;
+        });
+
+        return {
+            lat: selectedConfig.latField ? parseFloat(row[columnMap[selectedConfig.latField]]?.value) : null,
+            lng: selectedConfig.lonField ? parseFloat(row[columnMap[selectedConfig.lonField]]?.value) : null,
+            color: selectedConfig.colorField ? row[columnMap[selectedConfig.colorField]]?.value : null,
+            size: selectedConfig.sizeField ? parseFloat(row[columnMap[selectedConfig.sizeField]]?.value) : null,
+            label: selectedConfig.labelField ? row[columnMap[selectedConfig.labelField]]?.value : null
+        };
+        });
+
+        renderGlobe(formattedData, selectedConfig);
+    }).catch(err => {
+        console.error("Error fetching data from worksheet:", err);
+    });
+  }
+
+</script>
+</html>

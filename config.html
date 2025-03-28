@@ -27,60 +27,33 @@
     // running in a popup is that the popup extension must use the method
     // initializeDialogAsync instead of initializeAsync for initialization.
     // This has no affect on the development of the extension but is used internally.
-    tableau.extensions.initializeAsync({'configure': configure}).then(() => {
-        selectedWorksheet = tableau.extensions.worksheetApi.activeWorksheet;
-        populateFields();
+    tableau.extensions.initializeDialogAsync().then(payload => {
+        const initialConfig = JSON.parse(payload);
+        document.getElementById("latitudeField").value = initialConfig.latField;
+        document.getElementById("longitudeField").value = initialConfig.lonField;
+        document.getElementById("colorField").value = initialConfig.colorField;
+        document.getElementById("sizeField").value = initialConfig.sizeField;
+        document.getElementById("labelField").value = initialConfig.labelField;
     }).catch(err => {
-        console.error("Error initializing Tableau extension:", err);
+        console.error("Error initializing dialog:", err);
     });
+
   }); 
 
   function closeDialog() {
-   // Save the settings with tableau.extensions.settings.saveAsync()
-   // Or pass the new configuration setting in the close payload
-     tableau.extensions.ui.closeDialog('NewInterval');
-     console.log("Settings saved");
-    }
+    const config = {
+      latField: document.getElementById("latitudeField").value,
+      lonField: document.getElementById("longitudeField").value,
+      colorField: document.getElementById("colorField").value,
+      sizeField: document.getElementById("sizeField").value,
+      labelField: document.getElementById("labelField").value
+    };
 
-  function configure() {
-    const popupUrl = 'config.html';
-    tableau.extensions.ui.displayDialogAsync(popupUrl, JSON.stringify(selectedConfig), { height: 400, width: 400 })
-        .then(payload => {
-            selectedConfig = JSON.parse(payload);
-            updateGlobe();
-        })
-            .catch(err => {
-            console.error("Error opening config dialog:", err);
-        });
+    tableau.extensions.ui.closeDialog(JSON.stringify(config));
+    console.log("Settings saved");
   }
 
-  function updateGlobe() {
-    if (!selectedWorksheet) {
-        console.error("No worksheet selected");
-        return;
-    }
-
-    selectedWorksheet.getSummaryDataAsync().then(dataTable => {
-        const formattedData = dataTable.data.map(row => {
-        const columnMap = {};
-        dataTable.columns.forEach((col, idx) => {
-            columnMap[col.fieldName] = idx;
-        });
-
-        return {
-            lat: selectedConfig.latField ? parseFloat(row[columnMap[selectedConfig.latField]]?.value) : null,
-            lng: selectedConfig.lonField ? parseFloat(row[columnMap[selectedConfig.lonField]]?.value) : null,
-            color: selectedConfig.colorField ? row[columnMap[selectedConfig.colorField]]?.value : null,
-            size: selectedConfig.sizeField ? parseFloat(row[columnMap[selectedConfig.sizeField]]?.value) : null,
-            label: selectedConfig.labelField ? row[columnMap[selectedConfig.labelField]]?.value : null
-        };
-        });
-
-        renderGlobe(formattedData, selectedConfig);
-    }).catch(err => {
-        console.error("Error fetching data from worksheet:", err);
-    });
-  }
+  document.getElementById("applyConfigButton").addEventListener("click", applyConfiguration);
 
 </script>
 </html>

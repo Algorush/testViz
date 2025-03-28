@@ -79,7 +79,7 @@ function renderGlobe(data, config) {
 }
 
 function setupDataChangeListener() {
-  selectedWorksheet.addEventListener(tableau.TableauEventType.DataChanged, () => {
+  selectedWorksheet.addEventListener(tableau.TableauEventType.SummaryDataChanged, () => {
     console.log("Data changed, updating globe...");
     updateGlobe();
   });

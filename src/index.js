@@ -1,4 +1,5 @@
-//import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import Globe from './GlobeViz.js';
 
 let selectedWorksheet = null;

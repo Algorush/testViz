@@ -1,5 +1,5 @@
 //import { createRoot } from 'react-dom/client';
-import Globe from './GlobeViz';
+import Globe from './GlobeViz.js';
 
 let selectedWorksheet = null;
 let selectedConfig = {

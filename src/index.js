@@ -1,5 +1,6 @@
 import React from 'react';
 import Globe from './GlobeViz.js';
+import { createRoot } from "react-dom/client";
 
 let selectedWorksheet = null;
 let selectedConfig = {
@@ -72,11 +73,10 @@ function renderGlobe(data, config) {
   const globeContainer = document.getElementById("globeViz");
 
   if (!globeRoot) {
-      globeRoot = createRoot(globeContainer);
-      globeRoot.render(<Globe data={data} config={config} />);
-  } else {
-      globeRoot.render(<Globe data={data} config={config} />);
+    globeRoot = createRoot(globeContainer);
   }
+
+  globeRoot.render(<Globe data={data} config={config} />);
 }
 
 function setupDataChangeListener() {

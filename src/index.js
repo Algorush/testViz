@@ -1,7 +1,6 @@
 import React from 'react';
 import Globe from './GlobeViz.js';
 import { createRoot } from "react-dom/client";
-import tableau from "tableau-api";
 
 let selectedWorksheet = null;
 let selectedConfig = {

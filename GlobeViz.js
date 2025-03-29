@@ -192,7 +192,7 @@ const GlobeViz = ({ data, config }) => {
     }
   };
 
-  return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
+  return React.createElement("div", { ref: containerRef, style: { width: '100%', height: '100%' } });
 };
 
 export default GlobeViz;

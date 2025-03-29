@@ -1,3 +1,5 @@
+//import { createRoot } from 'react-dom/client';
+
 let selectedWorksheet = null;
 let selectedConfig = {
   latField: "",
@@ -8,6 +10,8 @@ let selectedConfig = {
 };
 let isConfigured = false;
 let viz = null;
+let globeRoot = null;
+
 
 window.onload = () => {
   const contextMenus = {
@@ -64,12 +68,14 @@ function updateGlobe() {
 }
 
 function renderGlobe(data, config) {
-  if (window.globeInstance) {
-    window.globeInstance.updateData(data, config);
-  } else {
     const globeContainer = document.getElementById("globeViz");
-    window.globeInstance = ReactDOM.createRoot(globeContainer).render(React.createElement(Globe, { data, config }));
-  }
+
+    if (!globeRoot) {
+        globeRoot = createRoot(globeContainer);
+        globeRoot.render(<Globe data={data} config={config} />);
+    } else {
+        globeRoot.render(<Globe data={data} config={config} />);
+    }
 }
 
 function setupDataChangeListener() {

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Globe from './GlobeViz.js';
 
 let selectedWorksheet = null;
@@ -72,11 +71,12 @@ function updateGlobe() {
 function renderGlobe(data, config) {
   const globeContainer = document.getElementById("globeViz");
 
-  if (!window.globeRoot) {
-    window.globeRoot = ReactDOM.createRoot(globeContainer);
+  if (!globeRoot) {
+      globeRoot = createRoot(globeContainer);
+      globeRoot.render(<Globe data={data} config={config} />);
+  } else {
+      globeRoot.render(<Globe data={data} config={config} />);
   }
-  
-  window.globeRoot.render(React.createElement(Globe, { data, config }));
 }
 
 function setupDataChangeListener() {

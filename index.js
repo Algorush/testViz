@@ -78,3 +78,27 @@ function setupDataChangeListener() {
     updateGlobe();
   });
 }
+
+function populateConfigOptions() {
+  if (!selectedWorksheet) return;
+
+  selectedWorksheet.getSummaryDataAsync().then(dataTable => {
+    const columns = dataTable.columns.map(col => col.fieldName);
+    const fields = ["latField", "lonField", "colorField", "sizeField", "labelField"];
+    
+    fields.forEach(field => {
+      const selectElement = document.getElementById(field);
+      if (selectElement) {
+        selectElement.innerHTML = "";
+        columns.forEach(colName => {
+          const option = document.createElement("option");
+          option.value = colName;
+          option.textContent = colName;
+          selectElement.appendChild(option);
+        });
+      }
+    });
+  }).catch(err => {
+    console.error("Error fetching columns for configuration:", err);
+  });
+}

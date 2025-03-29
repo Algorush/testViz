@@ -2,6 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+
+      .container {
+        max-width: 400px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        margin-bottom: 15px;
+        font-size: 18px;
+      }
+
+      label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+      }
+
+      select, button {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+    </style>
 </head>
 <body>
     <h2>Configure Fields</h2>
@@ -23,38 +71,48 @@
     <button id="applyConfigButton">Apply</button>
 </body>
 <script>
-  $(document).ready(function () {
-    // The only difference between an extension in a dashboard and an extension
-    // running in a popup is that the popup extension must use the method
-    // initializeDialogAsync instead of initializeAsync for initialization.
-    // This has no affect on the development of the extension but is used internally.
+window.onload = () => {
     tableau.extensions.initializeDialogAsync().then(payload => {
-        const initialConfig = JSON.parse(payload);
-        document.getElementById("latitudeField").value = initialConfig.latField;
-        document.getElementById("longitudeField").value = initialConfig.lonField;
-        document.getElementById("colorField").value = initialConfig.colorField;
-        document.getElementById("sizeField").value = initialConfig.sizeField;
-        document.getElementById("labelField").value = initialConfig.labelField;
-    }).catch(err => {
-        console.error("Error initializing dialog:", err);
+        let config = JSON.parse(payload);
+        loadAvailableFields();
+        applyConfig(config);
+    }).catch(err => console.error("Error initializing dialog:", err));
+};
+
+function loadAvailableFields() {
+    let fields = JSON.parse(tableau.extensions.settings.get('availableFields') || '[]');
+    let selectElements = document.querySelectorAll('select');
+    
+    selectElements.forEach(select => {
+        select.innerHTML = '<option value="">-- Select --</option>';
+        fields.forEach(field => {
+            let option = document.createElement('option');
+            option.value = field;
+            option.textContent = field;
+            select.appendChild(option);
+        });
     });
+}
 
-  }); 
+function applyConfig(config) {
+    document.getElementById('latField').value = config.latField || "";
+    document.getElementById('lonField').value = config.lonField || "";
+    document.getElementById('colorField').value = config.colorField || "";
+    document.getElementById('sizeField').value = config.sizeField || "";
+    document.getElementById('labelField').value = config.labelField || "";
+}
 
-  function closeDialog() {
-    const config = {
-      latField: document.getElementById("latitudeField").value,
-      lonField: document.getElementById("longitudeField").value,
-      colorField: document.getElementById("colorField").value,
-      sizeField: document.getElementById("sizeField").value,
-      labelField: document.getElementById("labelField").value
+document.getElementById('applyConfigButton').addEventListener('click', () => {
+    let newConfig = {
+        latField: document.getElementById('latField').value,
+        lonField: document.getElementById('lonField').value,
+        colorField: document.getElementById('colorField').value,
+        sizeField: document.getElementById('sizeField').value,
+        labelField: document.getElementById('labelField').value
     };
 
-    tableau.extensions.ui.closeDialog(JSON.stringify(config));
-    console.log("Settings saved");
-  }
-
-  document.getElementById("applyConfigButton").addEventListener("click", applyConfiguration);
+    tableau.extensions.ui.closeDialog(JSON.stringify(newConfig));
+});
 
 </script>
 </html>

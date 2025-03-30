@@ -1,6 +1,3 @@
-import { renderGlobe } from "./globe";
-import "./styles.css";
-
 window.onload = () => {
   tableau.extensions.initializeAsync({ configure: configure })
     .then(() => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom/client";
 import Globe from "./GlobeViz";
 
 window.onload = () => {
@@ -92,7 +92,7 @@ function renderGlobe(data, config) {
   const globeContainer = document.getElementById("globeViz");
 
   if (!globeRoot) {
-    globeRoot = createRoot(globeContainer);
+    globeRoot = ReactDOM.createRoot(globeContainer);
   }
 
   globeRoot.render(<Globe data={data} config={config} />);

@@ -81,23 +81,17 @@
     const worksheet = tableau.extensions.worksheetContent.worksheet;
 
     // get field names
-    const fieldNames = worksheet.getDataSourceAsync()
-        .then(ds => ds.fields.map(field => field.name))
-        .catch(err => {
-            console.error("Error fetching field names:", err);
-            return [];
-        });
+    worksheet.getSummaryDataAsync().then(summaryData => {
+        const fieldNames = summaryData.columns.map(col => col.fieldName);
+        console.log("Available fields:", fieldNames);
 
-    fieldNames.then(names => {
-        console.log("Available fields:", names);
-
-        populateDropdown("latitude", names);
-        populateDropdown("longitude", names);
-        populateDropdown("size", names, true);
-        populateDropdown("color", names, true);
-        populateDropdown("country", names);
-
-        document.getElementById("applyConfigButton").addEventListener("click", saveConfig);
+        populateDropdown("latitude", fieldNames);
+        populateDropdown("longitude", fieldNames);
+        populateDropdown("size", fieldNames, true);
+        populateDropdown("color", fieldNames, true);
+        populateDropdown("country", fieldNames);
+    }).catch(err => {
+        console.error("Error fetching summary data:", err);
     });
 });
 

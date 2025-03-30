@@ -82,6 +82,8 @@ function configure() {
         });
 }
 
+let globeRoot = null;
+
 function renderGlobe(data, config) {
   const globeContainer = document.getElementById("globeViz");
 

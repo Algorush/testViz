@@ -7,6 +7,7 @@ window.onload = () => {
 
         worksheet.getSummaryDataAsync()
           .then(dataTable => {
+            console.log("Data table:", dataTable);
               const processedData = processTableauData(dataTable);
 
               if (!processedData) {

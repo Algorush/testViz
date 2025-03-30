@@ -10,8 +10,7 @@ window.onload = () => {
               const processedData = processTableauData(dataTable);
 
               if (!processedData) {
-                  document.getElementById("warning").innerText =
-                      "Error: Specify latitude/longitude or Country in the settings.";
+                  console.warn("No suitable data found. Please open settings.");
                   return;
               }
 

@@ -74,48 +74,66 @@
     <button id="applyConfigButton">Apply</button>
 </body>
 <script>
-let worksheet = null;
+
 window.onload = () => {
-    tableau.extensions.initializeDialogAsync().then(payload => {
-        let config = JSON.parse(payload);
-        console.log("Config:", config);
-        loadAvailableFields();
-    }).catch(err => console.error("Error initializing dialog:", err));
-};
+  tableau.extensions.initializeDialogAsync().then(() => {
+      console.log("Config dialog initialized.");
 
-function loadAvailableFields() {
-  worksheet.getSummaryDataAsync().then((dataTable) => {
-        const columns = dataTable.columns.map(col => col.fieldName);
-        console.log("Available columns:", columns);
+      const worksheet = tableau.extensions.dashboardContent.dashboard.worksheets[0];
 
-        populateSelect("select-latitude", columns, tableau.extensions.settings.get("latitude"));
-        populateSelect("select-longitude", columns, tableau.extensions.settings.get("longitude"));
-        populateSelect("select-size", columns, tableau.extensions.settings.get("size"));
-        populateSelect("select-color", columns, tableau.extensions.settings.get("color"));
-        populateSelect("select-country", columns, tableau.extensions.settings.get("country"));
-    });
+      worksheet.getSummaryDataAsync().then(dataTable => {
+          const fieldNames = dataTable.columns.map(col => col.fieldName);
+          console.log("Available fields:", fieldNames);
+
+          populateDropdown("latitude", fieldNames);
+          populateDropdown("longitude", fieldNames);
+          populateDropdown("size", fieldNames, true);
+          populateDropdown("color", fieldNames, true);
+          populateDropdown("country", fieldNames);
+
+          document.getElementById("saveConfig").addEventListener("click", saveConfig);
+      });
+  });
 }
 
-function populateSelect(id, columns, savedValue) {
+/**
+ * Populates a dropdown (`select`) with field options.
+ * @param {string} id - The ID of the `<select>` element.
+ * @param {string[]} fieldNames - The available field names.
+ * @param {boolean} [optional=false] - Whether the field is optional.
+ */
+function populateDropdown(id, fieldNames, optional = false) {
     const select = document.getElementById(id);
-    select.innerHTML = `<option value="">- Choose -</option>`;
-    columns.forEach(col => {
-        const selected = savedValue === col ? "selected" : "";
-        select.innerHTML += `<option value="${col}" ${selected}>${col}</option>`;
+    select.innerHTML = optional ? '<option value="">None</option>' : "";
+
+    fieldNames.forEach(field => {
+        const option = document.createElement("option");
+        option.value = field;
+        option.textContent = field;
+        select.appendChild(option);
     });
+
+    // Restore previous selection
+    const savedValue = tableau.extensions.settings.get(id);
+    if (savedValue) {
+        select.value = savedValue;
+    }
 }
 
-document.getElementById("applyConfigButton").addEventListener("click", () => {
-    tableau.extensions.settings.set("latitude", document.getElementById("select-latitude").value);
-    tableau.extensions.settings.set("longitude", document.getElementById("select-longitude").value);
-    tableau.extensions.settings.set("size", document.getElementById("select-size").value);
-    tableau.extensions.settings.set("color", document.getElementById("select-color").value);
-    tableau.extensions.settings.set("country", document.getElementById("select-country").value);
+/**
+ * Saves user selections to Tableau settings.
+ */
+function saveConfig() {
+    tableau.extensions.settings.set("latitude", document.getElementById("latitude").value);
+    tableau.extensions.settings.set("longitude", document.getElementById("longitude").value);
+    tableau.extensions.settings.set("size", document.getElementById("size").value);
+    tableau.extensions.settings.set("color", document.getElementById("color").value);
+    tableau.extensions.settings.set("country", document.getElementById("country").value);
 
     tableau.extensions.settings.saveAsync().then(() => {
-        tableau.extensions.ui.closeDialog("Saved");
+        console.log("Settings saved.");
+        tableau.extensions.ui.closeDialog("");
     });
-});
-
+}
 </script>
 </html>

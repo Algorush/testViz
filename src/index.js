@@ -50,6 +50,7 @@ function processTableauData(dataTable) {
             color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
         }));
         configType = "coordinates";
+        console.log("coordinates");
     } else if (countryField && columns.includes(countryField)) {
         // Use country names
         processedData = dataTable.data.map(row => ({
@@ -58,11 +59,12 @@ function processTableauData(dataTable) {
             color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
         }));
         configType = "countries";
+        console.log("countries");
     } else {
         console.warn("No suitable data found. Please open settings.");
         return null;
     }
-
+    console.log("Processed data:", processedData);
     return { type: configType, data: processedData };
 }
 

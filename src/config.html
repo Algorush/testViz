@@ -75,7 +75,6 @@
 </body>
 <script>
 
-window.onload = () => {
   tableau.extensions.initializeDialogAsync().then(() => {
       console.log("Config dialog initialized.");
 
@@ -101,7 +100,7 @@ window.onload = () => {
           document.getElementById("applyConfigButton").addEventListener("click", saveConfig);
       });
   });
-}
+
 
 /**
  * Populates a dropdown (`select`) with field options.

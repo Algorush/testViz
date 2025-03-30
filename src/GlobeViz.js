@@ -188,7 +188,7 @@ const GlobeViz = ({ data, config }) => {
         console.error('Error applying filter:', err);
       });
     } else {
-      console.error('Worksheet not found:', config.worksheetName);
+      console.error('Worksheet not found:');
     }
   };
 

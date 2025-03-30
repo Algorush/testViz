@@ -1,72 +1,86 @@
-import React from 'react';
-import Globe from './GlobeViz.js';
-import { createRoot } from "react-dom/client";
-
-let selectedWorksheet = null;
-let selectedConfig = {
-  latField: "",
-  lonField: "",
-  colorField: "",
-  sizeField: "",
-  labelField: ""
-};
-let isConfigured = false;
-let viz = null;
-let globeRoot = null;
-
+import { renderGlobe } from "./globe";
+import "./styles.css";
 
 window.onload = () => {
-  const contextMenus = {
-    "configure": () => {
-      const popupUrl = 'config.html';
-      
-      tableau.extensions.ui.displayDialogAsync(popupUrl, JSON.stringify(selectedConfig), { 
-        height: 400, 
-        width: 400 
-      })
-      .then(payload => {
-        selectedConfig = JSON.parse(payload);
-        updateGlobe();
-      })
-      .catch(err => {
-        console.error("Error opening config dialog:", err);
-      });
-    }
-  };
-  tableau.extensions.initializeAsync(contextMenus).then(() => {
-      console.log("Tableau Extensions API initialized");
-      selectedWorksheet = tableau.extensions.worksheetContent.worksheet;
-      setupDataChangeListener();
-  }).catch((err) => {
-      console.error("Error initializing:", err);
-  });
+  tableau.extensions.initializeAsync({ configure: configure })
+    .then(() => {
+        console.log("Tableau Extension initialized");
+
+        const worksheet = tableau.extensions.dashboardContent.dashboard.worksheets[0];
+
+        worksheet.getSummaryDataAsync()
+          .then(dataTable => {
+              const processedData = processTableauData(dataTable);
+
+              if (!processedData) {
+                  document.getElementById("warning").innerText =
+                      "Error: Specify latitude/longitude or Country in the settings.";
+                  return;
+              }
+
+              console.log(`Data prepared for rendering (${processedData.type}):`, processedData.data);
+              renderGlobe(processedData.data, { type: processedData.type });
+          })
+          .catch(err => console.error("Error fetching data:", err));
+    })
+    .catch(err => console.error("Tableau Extension initialization error:", err));
 }
 
-function updateGlobe() {
-  if (!selectedWorksheet) {
-    console.error("No worksheet selected");
-    return;
-  }
+/**
+ * Processes Tableau worksheet data and determines whether to use latitude/longitude or country names.
+ * @param {Object} dataTable - Tableau dataTable object.
+ * @returns {Object|null} Processed data object with type and formatted data or null if invalid.
+ */
+function processTableauData(dataTable) {
+    const columns = dataTable.columns.map(col => col.fieldName);
+    console.log("Loaded fields:", columns);
 
-  selectedWorksheet.getSummaryDataAsync().then(dataTable => {
-    const columnMap = {};
-    dataTable.columns.forEach((col, idx) => {
-      columnMap[col.fieldName] = idx;
-    });
-    console.log("selectedWorksheet.getSummaryDataAsync():", dataTable);
-    const formattedData = dataTable.data.map(row => ({
-      lat: selectedConfig.latField ? parseFloat(row[columnMap[selectedConfig.latField]]?.value) : null,
-      lng: selectedConfig.lonField ? parseFloat(row[columnMap[selectedConfig.lonField]]?.value) : null,
-      color: selectedConfig.colorField ? row[columnMap[selectedConfig.colorField]]?.value : null,
-      size: selectedConfig.sizeField ? parseFloat(row[columnMap[selectedConfig.sizeField]]?.value) : null,
-      label: selectedConfig.labelField ? row[columnMap[selectedConfig.labelField]]?.value : null
-    }));
+    const latField = tableau.extensions.settings.get("latitude");
+    const lonField = tableau.extensions.settings.get("longitude");
+    const sizeField = tableau.extensions.settings.get("size");
+    const colorField = tableau.extensions.settings.get("color");
+    const countryField = tableau.extensions.settings.get("country");
 
-    console.log("Updated Globe Data:", formattedData);
-    renderGlobe(formattedData, selectedConfig);
-  }).catch(err => {
-    console.error("Error fetching data from worksheet:", err);
-  });
+    let processedData = [];
+    let configType = "";
+
+    if (latField && lonField && columns.includes(latField) && columns.includes(lonField)) {
+        // Use latitude and longitude
+        processedData = dataTable.data.map(row => ({
+            latitude: parseFloat(row[columns.indexOf(latField)].value),
+            longitude: parseFloat(row[columns.indexOf(lonField)].value),
+            size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,
+            color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
+        }));
+        configType = "coordinates";
+    } else if (countryField && columns.includes(countryField)) {
+        // Use country names
+        processedData = dataTable.data.map(row => ({
+            country: row[columns.indexOf(countryField)].value,
+            size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,
+            color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
+        }));
+        configType = "countries";
+    } else {
+        console.warn("No suitable data found. Please open settings.");
+        return null;
+    }
+
+    return { type: configType, data: processedData };
+}
+
+/**
+ * Opens the configuration panel where users can select field names for latitude, longitude, etc.
+ */
+function configure() {
+    tableau.extensions.ui.displayDialogAsync("config.html", "", { height: 500, width: 400 })
+        .then(() => {
+          console.log("Configuration saved, reloading data...");
+            
+        })
+        .catch(err => {            
+          console.error("Configuration error:", err);            
+        });
 }
 
 function renderGlobe(data, config) {
@@ -77,11 +91,4 @@ function renderGlobe(data, config) {
   }
 
   globeRoot.render(<Globe data={data} config={config} />);
-}
-
-function setupDataChangeListener() {
-  selectedWorksheet.addEventListener(tableau.TableauEventType.SummaryDataChanged, () => {
-    console.log("Data changed, updating globe...");
-    updateGlobe();
-  });
 }

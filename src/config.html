@@ -71,49 +71,45 @@
     <button id="applyConfigButton">Apply</button>
 </body>
 <script>
+let worksheet = null;
 window.onload = () => {
     tableau.extensions.initializeDialogAsync().then(payload => {
         let config = JSON.parse(payload);
         console.log("Config:", config);
         loadAvailableFields();
-        applyConfig(config);
     }).catch(err => console.error("Error initializing dialog:", err));
 };
 
 function loadAvailableFields() {
-    let fields = JSON.parse(tableau.extensions.settings.get('availableFields') || '[]');
-    console.log("Available fields:", fields);
-    let selectElements = document.querySelectorAll('select');
-    
-    selectElements.forEach(select => {
-        select.innerHTML = '<option value="">-- Select --</option>';
-        fields.forEach(field => {
-            let option = document.createElement('option');
-            option.value = field;
-            option.textContent = field;
-            select.appendChild(option);
-        });
+  worksheet.getSummaryDataAsync().then((dataTable) => {
+        const columns = dataTable.columns.map(col => col.fieldName);
+        console.log("Available columns:", columns);
+
+        populateSelect("select-latitude", columns, tableau.extensions.settings.get("latitude"));
+        populateSelect("select-longitude", columns, tableau.extensions.settings.get("longitude"));
+        populateSelect("select-size", columns, tableau.extensions.settings.get("size"));
+        populateSelect("select-color", columns, tableau.extensions.settings.get("color"));
     });
 }
 
-function applyConfig(config) {
-    document.getElementById('latField').value = config.latField || "";
-    document.getElementById('lonField').value = config.lonField || "";
-    document.getElementById('colorField').value = config.colorField || "";
-    document.getElementById('sizeField').value = config.sizeField || "";
-    document.getElementById('labelField').value = config.labelField || "";
+function populateSelect(id, columns, savedValue) {
+    const select = document.getElementById(id);
+    select.innerHTML = `<option value="">- Choose -</option>`;
+    columns.forEach(col => {
+        const selected = savedValue === col ? "selected" : "";
+        select.innerHTML += `<option value="${col}" ${selected}>${col}</option>`;
+    });
 }
 
-document.getElementById('applyConfigButton').addEventListener('click', () => {
-    let newConfig = {
-        latField: document.getElementById('latField').value,
-        lonField: document.getElementById('lonField').value,
-        colorField: document.getElementById('colorField').value,
-        sizeField: document.getElementById('sizeField').value,
-        labelField: document.getElementById('labelField').value
-    };
+document.getElementById("applyConfigButton").addEventListener("click", () => {
+    tableau.extensions.settings.set("latitude", document.getElementById("select-latitude").value);
+    tableau.extensions.settings.set("longitude", document.getElementById("select-longitude").value);
+    tableau.extensions.settings.set("size", document.getElementById("select-size").value);
+    tableau.extensions.settings.set("color", document.getElementById("select-color").value);
 
-    tableau.extensions.ui.closeDialog(JSON.stringify(newConfig));
+    tableau.extensions.settings.saveAsync().then(() => {
+        tableau.extensions.ui.closeDialog("Saved");
+    });
 });
 
 </script>

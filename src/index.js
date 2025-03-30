@@ -3,7 +3,7 @@ window.onload = () => {
     .then(() => {
         console.log("Tableau Extension initialized");
 
-        const worksheet = tableau.extensions.dashboardContent.dashboard.worksheets[0];
+        const worksheet = tableau.extensions.worksheetContent.worksheet;
 
         worksheet.getSummaryDataAsync()
           .then(dataTable => {

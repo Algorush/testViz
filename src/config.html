@@ -81,17 +81,24 @@ window.onload = () => {
 
       const worksheet = tableau.extensions.worksheetContent.worksheet;
 
-      worksheet.getSummaryDataAsync().then(dataTable => {
-          const fieldNames = dataTable.columns.map(col => col.fieldName);
-          console.log("Available fields:", fieldNames);
+      // get field names
+      const fieldNames = worksheet.getDataSourceAsync()
+          .then(ds => ds.fields.map(field => field.name))
+          .catch(err => {
+              console.error("Error fetching field names:", err);
+              return [];
+          });
 
-          populateDropdown("latitude", fieldNames);
-          populateDropdown("longitude", fieldNames);
-          populateDropdown("size", fieldNames, true);
-          populateDropdown("color", fieldNames, true);
-          populateDropdown("country", fieldNames);
+      fieldNames.then(names => {
+          console.log("Available fields:", names);
 
-          document.getElementById("saveConfig").addEventListener("click", saveConfig);
+          populateDropdown("latitude", names);
+          populateDropdown("longitude", names);
+          populateDropdown("size", names, true);
+          populateDropdown("color", names, true);
+          populateDropdown("country", names);
+
+          document.getElementById("applyConfigButton").addEventListener("click", saveConfig);
       });
   });
 }
@@ -102,7 +109,7 @@ window.onload = () => {
  * @param {string[]} fieldNames - The available field names.
  * @param {boolean} [optional=false] - Whether the field is optional.
  */
-function populateDropdown(id, fieldNames, optional = false) {
+ function populateDropdown(id, fieldNames, optional = false) {
     const select = document.getElementById(id);
     select.innerHTML = optional ? '<option value="">None</option>' : "";
 

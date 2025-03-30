@@ -53,7 +53,7 @@ function updateGlobe() {
     dataTable.columns.forEach((col, idx) => {
       columnMap[col.fieldName] = idx;
     });
-
+    console.log("selectedWorksheet.getSummaryDataAsync():", dataTable);
     const formattedData = dataTable.data.map(row => ({
       lat: selectedConfig.latField ? parseFloat(row[columnMap[selectedConfig.latField]]?.value) : null,
       lng: selectedConfig.lonField ? parseFloat(row[columnMap[selectedConfig.lonField]]?.value) : null,
@@ -83,29 +83,5 @@ function setupDataChangeListener() {
   selectedWorksheet.addEventListener(tableau.TableauEventType.SummaryDataChanged, () => {
     console.log("Data changed, updating globe...");
     updateGlobe();
-  });
-}
-
-function populateConfigOptions() {
-  if (!selectedWorksheet) return;
-
-  selectedWorksheet.getSummaryDataAsync().then(dataTable => {
-    const columns = dataTable.columns.map(col => col.fieldName);
-    const fields = ["latField", "lonField", "colorField", "sizeField", "labelField"];
-    
-    fields.forEach(field => {
-      const selectElement = document.getElementById(field);
-      if (selectElement) {
-        selectElement.innerHTML = "";
-        columns.forEach(colName => {
-          const option = document.createElement("option");
-          option.value = colName;
-          option.textContent = colName;
-          selectElement.appendChild(option);
-        });
-      }
-    });
-  }).catch(err => {
-    console.error("Error fetching columns for configuration:", err);
   });
 }

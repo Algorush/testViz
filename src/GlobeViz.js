@@ -3,10 +3,11 @@ import Globe from 'globe.gl';
 // import { scaleLinear, scaleOrdinal } from 'd3-scale';
 // import { schemeCategory10 } from 'd3-scale-chromatic';
 
-const GlobeViz = ({ data, config, worksheetRef }) => {
+const GlobeViz = ({ data, config }) => {
   const globeEl = useRef();
   const containerRef = useRef();
-
+  const worksheet = tableau.extensions.worksheetContent.worksheet;
+  
   useEffect(() => {
     if (!data || data.length === 0) {
       containerRef.current.innerHTML = '<p>No data available to render the globe.</p>';
@@ -212,7 +213,6 @@ function showTableauTooltip(country, event) {
       return;
     }
 
-    const worksheet = tableau.extensions.worksheetContent.worksheet;
     if (worksheet) {
       worksheet.applyFilterAsync(
         'Country', // Adjust if your field name differs

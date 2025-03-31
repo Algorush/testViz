@@ -115,5 +115,5 @@ function renderGlobe(data, config) {
     globeRoot = ReactDOM.createRoot(globeContainer);
   }
 
-  globeRoot.render(<Globe data={data} config={config} worksheetRef={currentWorksheet} />);
+  globeRoot.render(<Globe data={data} config={config}/>);
 }

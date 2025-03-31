@@ -195,7 +195,7 @@ const GlobeViz = ({ data, config, worksheetRef }) => {
 }
 
 function showTableauTooltip(country) {
-  if (worksheetRef)
+  if (worksheetRef) {
     console.log("worksheetRef", worksheetRef);
     console.log("selectMarksAsync: ", worksheetRef.selectMarksAsync);
     worksheetRef

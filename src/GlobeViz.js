@@ -117,7 +117,7 @@ const GlobeViz = ({ data, config }) => {
                 if (hoveredPolygon) {
                   hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgb(240, 240, 240)';
                 }
-                if (polygon.properties) {
+                if (polygon && polygon.properties) {
                   showTableauTooltip(polygon.properties.ADMIN, event);
                 }                
 

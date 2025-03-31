@@ -112,11 +112,11 @@ const GlobeViz = ({ data, config, worksheetRef }) => {
               countryName = null;
               applyTableauFilter(countryName);
             })
-            .onPolygonHover((polygon) => {
+            .onPolygonHover((polygon, event) => {
                 if (hoveredPolygon) {
                   hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgb(240, 240, 240)';
                 }
-                showTableauTooltip(polygon.properties.ADMIN);
+                showTableauTooltip(polygon.properties.ADMIN, event);
 
                 hoveredPolygon = polygon;
             
@@ -124,8 +124,6 @@ const GlobeViz = ({ data, config, worksheetRef }) => {
                   .polygonCapColor(d => (d === polygon ? 'rgb(255, 165, 0)' : d.__previousColor || 'rgb(240, 240, 240)'))
                   .polygonsTransitionDuration(200);
 
-                
-                
               })
 
 
@@ -194,13 +192,18 @@ const GlobeViz = ({ data, config, worksheetRef }) => {
     return { lat: latSum / count, lng: lngSum / count };
 }
 
-function showTableauTooltip(country) {
-  if (worksheetRef) {
-    worksheetRef
-        .selectMarksByValueAsync("Country", country)
-        .then(() => console.log(`Tooltip for ${country} activated in Tableau.`))
-        .catch(err => console.error("Error selecting Tableau mark:", err));
-  }
+function showTableauTooltip(country, event) {
+  worksheet.getTooltipTextAsync({ fieldName: "Country", value: country })
+  .then(tooltipText => {
+    const tooltip = document.getElementById("tooltip");
+    tooltip.innerHTML = tooltipText;
+    tooltip.style.left = `${event.pageX + 10}px`;
+    tooltip.style.top = `${event.pageY + 10}px`;
+    tooltip.style.display = "block";
+  })
+  .catch(err => {
+      console.error("Error fetching tooltip:", err);
+  });
 }
 
   const applyTableauFilter = (countryName) => {
@@ -225,7 +228,14 @@ function showTableauTooltip(country) {
     }
   };
 
-  return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
+  return (
+    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
+        <div id="tooltip" style={{
+            position: "absolute", display: "none", backgroundColor: "white",
+            border: "1px solid black", padding: "5px", borderRadius: "5px"
+        }}></div>
+    </div>
+  );
 };
 
 export default GlobeViz;

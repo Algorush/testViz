@@ -38,7 +38,8 @@ window.onload = () => {
               }
 
               console.log(`Data prepared for rendering (${processedData.type}):`, processedData.data);
-              renderGlobe(processedData.data, { type: processedData.type });
+              config.type = processedData.type;
+              renderGlobe(processedData.data, config);
           })
           .catch(err => console.error("Error fetching data:", err));
     })

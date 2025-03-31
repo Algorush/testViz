@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import Globe from "./GlobeViz";
 
 var config = {};
-const currentWorksheet = tableau.extensions.worksheetContent.worksheet;
+const currentWorksheet = null;
 
 window.onload = () => {
   tableau.extensions.initializeAsync({ configure: configure })

@@ -118,7 +118,20 @@ const GlobeViz = ({ data, config }) => {
                   hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgb(240, 240, 240)';
                 }
                 if (polygon && polygon.properties) {
-                  showTableauTooltip(polygon.properties.ADMIN, event);
+                  const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
+                  console.log("polygon ", polygon.properties);
+
+                  const countryData = data.find(d => d.name === countryName);
+
+                  if (!countryData) return;
+
+                  const tupleId = countryData.id;
+
+                  worksheet.hoverTupleAsync(tupleId, { 
+                    tooltipAnchorPoint: { x: event.pageX, y: event.pageY } 
+                  })
+                  .then(() => console.log('Tooltip shown for:', countryName))
+                  .catch((error) => console.log('Error hovering:', error));
                 }                
 
                 hoveredPolygon = polygon;

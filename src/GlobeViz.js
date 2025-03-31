@@ -39,25 +39,26 @@ const GlobeViz = ({ data, config }) => {
         .pointsMerge(false); // Disable merging for distinct circles
 
       // Optional size scaling
-      if (config.sizeField) {
-        const sizes = data.map(d => parseFloat(d[config.sizeField]));
+      if (config.size) {
+        const sizes = data.map(d => parseFloat(d[config.size]));
         const minSize = Math.min(...sizes);
         const maxSize = Math.max(...sizes);
         // const sizeScale = scaleLinear()
         //   .domain([minSize, maxSize])
         //   .range([0.2, 0.8]);
-        globe.pointRadius(d => sizeScale(parseFloat(d[config.sizeField])));
+        globe.pointRadius(d => sizeScale(parseFloat(d[config.size])));
       }
 
     // Проверяем, какие данные переданы
-    const hasCoordinates = data.some(d => d[config.latitudeField] && d[config.longitudeField]);
-    const hasCountries = data.some(d => d[config.countryField]);
+    const hasCoordinates = data.some(d => d[config.latitude] && d[config.longitude]);
+    const hasCountries = data.some(d => d[config.country]);
 
     if (hasCoordinates) {
+      console.log("points data");
       globe
         .pointsData(data)
-        .pointLat(d => parseFloat(d[config.latitudeField]))
-        .pointLng(d => parseFloat(d[config.longitudeField]))
+        .pointLat(d => parseFloat(d[config.latitude]))
+        .pointLng(d => parseFloat(d[config.longitude]))
         .pointRadius(0.3)
         .pointColor(() => '#ff6200')
         .pointAltitude(0.011);
@@ -124,7 +125,7 @@ const GlobeViz = ({ data, config }) => {
               })
 
             if (hasCountries) {
-              const countryData = data.map(d => d[config.countryField]);
+              const countryData = data.map(d => d[config.country]);
               globe.polygonsData(validGeojson.filter(f => countryData.includes(f.properties.ADMIN)));
             }
         })

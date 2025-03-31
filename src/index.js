@@ -3,13 +3,14 @@ import ReactDOM from "react-dom/client";
 import Globe from "./GlobeViz";
 
 var config = {};
+const currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
 window.onload = () => {
   tableau.extensions.initializeAsync({ configure: configure })
     .then(() => {
         console.log("Tableau Extension initialized");
 
-        const worksheet = tableau.extensions.worksheetContent.worksheet;
+        currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
         const settings = tableau.extensions.settings.getAll();
         console.log("Settings:", settings);
@@ -114,5 +115,5 @@ function renderGlobe(data, config) {
     globeRoot = ReactDOM.createRoot(globeContainer);
   }
 
-  globeRoot.render(<Globe data={data} config={config} />);
+  globeRoot.render(<Globe data={data} config={config} worksheetRef={currentWorksheet} />);
 }

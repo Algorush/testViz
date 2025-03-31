@@ -3,7 +3,7 @@ import Globe from 'globe.gl';
 // import { scaleLinear, scaleOrdinal } from 'd3-scale';
 // import { schemeCategory10 } from 'd3-scale-chromatic';
 
-const GlobeViz = ({ data, config }) => {
+const GlobeViz = ({ data, config, worksheetRef }) => {
   const globeEl = useRef();
   const containerRef = useRef();
 
@@ -122,7 +122,11 @@ const GlobeViz = ({ data, config }) => {
                 globe
                   .polygonCapColor(d => (d === polygon ? 'rgb(255, 165, 0)' : d.__previousColor || 'rgb(240, 240, 240)'))
                   .polygonsTransitionDuration(200);
+
+                showTableauTooltip(polygon.properties.ADMIN);
+                
               })
+
 
             if (hasCountries) {
               const countryData = data.map(d => d[config.country]);
@@ -185,6 +189,17 @@ const GlobeViz = ({ data, config }) => {
                 count++;
             });
         });
+    }
+
+    function showTableauTooltip(country) {
+      if (worksheetRef) {
+        if (worksheetRef) {
+          worksheetRef
+              .selectMarksAsync("Country", country, tableau.SelectionUpdateType.REPLACE)
+              .then(() => console.log(`Tooltip for ${country} activated in Tableau.`))
+              .catch(err => console.error("Error selecting Tableau mark:", err));
+        }
+      }
     }
 
     return { lat: latSum / count, lng: lngSum / count };

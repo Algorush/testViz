@@ -233,12 +233,7 @@ function showTableauTooltip(country, event) {
   };
 
   return (
-    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
-        <div id="tooltip" style={{
-            position: "absolute", display: "none", backgroundColor: "white",
-            border: "1px solid black", padding: "5px", borderRadius: "5px"
-        }}></div>
-    </div>
+    <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
   );
 };
 

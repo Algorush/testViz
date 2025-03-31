@@ -85,6 +85,15 @@
         height: 100%; /* Ensure it fills available space */
         background: #ffffff; /* White background */
         }
+
+        #tooltip {
+            position: absolute;
+            display: none;
+            background-color: white;
+            border: 1px solid black;
+            padding: 5px;
+            border-radius: 5px;
+        }
     </style>
     <!-- Load Tableau Extensions API -->
     <script src="./tableau.extensions.1.latest.js"></script>
@@ -94,6 +103,6 @@
 </head>
 <body>
     <div id="globeViz"></div>
-
+    <div id="tooltip"></div>
 </body>
 </html>

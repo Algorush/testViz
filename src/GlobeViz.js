@@ -116,14 +116,15 @@ const GlobeViz = ({ data, config, worksheetRef }) => {
                 if (hoveredPolygon) {
                   hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgb(240, 240, 240)';
                 }
-            
+                showTableauTooltip(polygon.properties.ADMIN);
+
                 hoveredPolygon = polygon;
             
                 globe
                   .polygonCapColor(d => (d === polygon ? 'rgb(255, 165, 0)' : d.__previousColor || 'rgb(240, 240, 240)'))
                   .polygonsTransitionDuration(200);
 
-                showTableauTooltip(polygon.properties.ADMIN);
+                
                 
               })
 
@@ -190,19 +191,18 @@ const GlobeViz = ({ data, config, worksheetRef }) => {
             });
         });
     }
-
-    function showTableauTooltip(country) {
-      if (worksheetRef) {
-        if (worksheetRef) {
-          worksheetRef
-              .selectMarksAsync("Country", country, tableau.SelectionUpdateType.REPLACE)
-              .then(() => console.log(`Tooltip for ${country} activated in Tableau.`))
-              .catch(err => console.error("Error selecting Tableau mark:", err));
-        }
-      }
-    }
-
     return { lat: latSum / count, lng: lngSum / count };
+}
+
+function showTableauTooltip(country) {
+  if (worksheetRef) {
+    if (worksheetRef) {
+      worksheetRef
+          .selectMarksAsync("Country", country, tableau.SelectionUpdateType.REPLACE)
+          .then(() => console.log(`Tooltip for ${country} activated in Tableau.`))
+          .catch(err => console.error("Error selecting Tableau mark:", err));
+    }
+  }
 }
 
   const applyTableauFilter = (countryName) => {

@@ -7,7 +7,7 @@ const GlobeViz = ({ data, config }) => {
   const globeEl = useRef();
   const containerRef = useRef();
   const worksheet = tableau.extensions.worksheetContent.worksheet;
-  
+
   useEffect(() => {
     if (!data || data.length === 0) {
       containerRef.current.innerHTML = '<p>No data available to render the globe.</p>';
@@ -196,6 +196,8 @@ const GlobeViz = ({ data, config }) => {
 function showTableauTooltip(country, event) {
   worksheet.getTooltipTextAsync({ fieldName: "Country", value: country })
   .then(tooltipText => {
+    console.log("tooltipText ", tooltipText);
+    console.log("event ", event);
     const tooltip = document.getElementById("tooltip");
     tooltip.innerHTML = tooltipText;
     tooltip.style.left = `${event.pageX + 10}px`;

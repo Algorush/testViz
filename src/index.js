@@ -28,7 +28,7 @@ window.onload = () => {
           defaultAltitude: parseFloat(settings.defaultAltitude) || 2,
         };
 
-        worksheet.getSummaryDataAsync()
+        currentWorksheet.getSummaryDataAsync()
           .then(dataTable => {
             console.log("Data table:", dataTable);
               const processedData = processTableauData(dataTable);

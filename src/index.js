@@ -2,12 +2,30 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Globe from "./GlobeViz";
 
+var config = {};
+
 window.onload = () => {
   tableau.extensions.initializeAsync({ configure: configure })
     .then(() => {
         console.log("Tableau Extension initialized");
 
         const worksheet = tableau.extensions.worksheetContent.worksheet;
+
+        const settings = tableau.extensions.settings.getAll();
+        console.log("Settings:", settings);
+
+        config = {
+          latitude: settings.latitude || "lat",
+          longitude: settings.longitude || "lng",
+          country: settings.country || "Country",
+          size: settings.size || null,
+          color: settings.color || null,
+          pointColor: settings.pointColor || "#ff6200",
+          pointRadius: parseFloat(settings.pointRadius) || 0.3,
+          pointAltitude: parseFloat(settings.pointAltitude) || 0.011,
+          zoomAltitude: parseFloat(settings.zoomAltitude) || 0.7,
+          defaultAltitude: parseFloat(settings.defaultAltitude) || 2,
+        };
 
         worksheet.getSummaryDataAsync()
           .then(dataTable => {

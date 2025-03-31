@@ -29,7 +29,7 @@ const GlobeViz = ({ data, config }) => {
       var globe = new Globe(containerRef.current)
         .showAtmosphere(false)
         .backgroundColor('#f5f5f5')
-        .pointOfView({ lat: 30, lng: -90, altitude: 2 })
+        .pointOfView({ lat: 30, lng: -90, altitude: config.defaultAltitude })
         .pointsData(data)
         .pointLat('lat')
         .pointLng('lng')
@@ -49,7 +49,7 @@ const GlobeViz = ({ data, config }) => {
         globe.pointRadius(d => sizeScale(parseFloat(d[config.size])));
       }
 
-    // Проверяем, какие данные переданы
+
     const hasCoordinates = data.some(d => d[config.latitude] && d[config.longitude]);
     const hasCountries = data.some(d => d[config.country]);
 
@@ -59,9 +59,9 @@ const GlobeViz = ({ data, config }) => {
         .pointsData(data)
         .pointLat(d => parseFloat(d[config.latitude]))
         .pointLng(d => parseFloat(d[config.longitude]))
-        .pointRadius(0.3)
-        .pointColor(() => '#ff6200')
-        .pointAltitude(0.011);
+        .pointRadius(config.pointRadius)
+        .pointColor(() => config.pointColor)
+        .pointAltitude(config.pointAltitude);
     }
 
       document.addEventListener('click', event => {
@@ -73,7 +73,7 @@ const GlobeViz = ({ data, config }) => {
       function resetView() {
         globe.controls().autoRotate = true;
         const currentView = globe.pointOfView();
-        globe.pointOfView({ ...currentView, altitude: 3 }, 1000);
+        globe.pointOfView({ ...currentView, altitude: config.defaultAltitude }, 1000);
       }
 
       // Load polygon layer with error handling
@@ -103,7 +103,7 @@ const GlobeViz = ({ data, config }) => {
                   selectedCountry = countryName;
                   isZoomedIn = true;
                   globe.controls().autoRotate = false;
-                  globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: 0.7 }, 2000);
+                  globe.pointOfView({ lat: center.lat, lng: center.lng, altitude: config.zoomAltitude }, 2000);
               } else if (selectedCountry === countryName && isZoomedIn) {
                   isZoomedIn = false;
                   selectedCountry = null;

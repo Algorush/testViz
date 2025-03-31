@@ -14,7 +14,6 @@ const GlobeViz = ({ data, config }) => {
     let isZoomedIn = false;
     let selectedCountry = null;
     let countryName = null;
-    let hoveredPolygon = null;
 
     try {
       const testCanvas = document.createElement('canvas');

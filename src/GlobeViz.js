@@ -49,6 +49,20 @@ const GlobeViz = ({ data, config }) => {
         globe.pointRadius(d => sizeScale(parseFloat(d[config.sizeField])));
       }
 
+    // Проверяем, какие данные переданы
+    const hasCoordinates = data.some(d => d[config.latitudeField] && d[config.longitudeField]);
+    const hasCountries = data.some(d => d[config.countryField]);
+
+    if (hasCoordinates) {
+      globe
+        .pointsData(data)
+        .pointLat(d => parseFloat(d[config.latitudeField]))
+        .pointLng(d => parseFloat(d[config.longitudeField]))
+        .pointRadius(0.3)
+        .pointColor(() => '#ff6200')
+        .pointAltitude(0.011);
+    }
+
       document.addEventListener('click', event => {
           if (!event.target.closest('canvas')) return;
           if (countryName) return;
@@ -108,6 +122,11 @@ const GlobeViz = ({ data, config }) => {
                   .polygonCapColor(d => (d === polygon ? 'rgb(255, 165, 0)' : d.__previousColor || 'rgb(240, 240, 240)'))
                   .polygonsTransitionDuration(200);
               })
+
+            if (hasCountries) {
+              const countryData = data.map(d => d[config.countryField]);
+              globe.polygonsData(validGeojson.filter(f => countryData.includes(f.properties.ADMIN)));
+            }
         })
         .catch(err => {
           console.error('Error loading polygons:', err);

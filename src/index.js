@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Globe from "./globeViz2.js";
+import Globe from "./GlobeViz";
 
 window.onload = () => {
   tableau.extensions.initializeAsync({ configure: configure })

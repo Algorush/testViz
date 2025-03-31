@@ -196,10 +196,8 @@ const GlobeViz = ({ data, config, worksheetRef }) => {
 
 function showTableauTooltip(country) {
   if (worksheetRef) {
-    console.log("worksheetRef", worksheetRef);
-    console.log("selectMarksAsync: ", worksheetRef.selectMarksAsync);
     worksheetRef
-        .selectMarksAsync("Country", country, tableau.SelectionUpdateType.REPLACE)
+        .selectMarksByValueAsync("Country", country)
         .then(() => console.log(`Tooltip for ${country} activated in Tableau.`))
         .catch(err => console.error("Error selecting Tableau mark:", err));
   }

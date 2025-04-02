@@ -56,11 +56,11 @@ function processTableauData(dataTable) {
     const columns = dataTable.columns.map(col => col.fieldName);
     console.log("Loaded fields:", columns);
 
-    const latField = tableau.extensions.settings.get("latitude");
-    const lonField = tableau.extensions.settings.get("longitude");
-    const sizeField = tableau.extensions.settings.get("size");
-    const colorField = tableau.extensions.settings.get("color");
-    const countryField = tableau.extensions.settings.get("country");
+    let latField = tableau.extensions.settings.get("latitude");
+    let lonField = tableau.extensions.settings.get("longitude");
+    let sizeField = tableau.extensions.settings.get("size");
+    let colorField = tableau.extensions.settings.get("color");
+    let countryField = tableau.extensions.settings.get("country");
 
     console.log(countryField)
     let processedData = [];

@@ -18,6 +18,7 @@ const GlobeViz = ({ data, config }) => {
     let selectedCountry = null;
     let countryName = null;
     let hoveredPolygon = null;
+    let currentTupleId = null;
 
     let mousePosition = { x: 0, y: 0 };
 
@@ -145,9 +146,9 @@ const GlobeViz = ({ data, config }) => {
 
                   if (!countryData) return;                  
 
-                  const tupleId = data.indexOf(countryData) + 1;
+                  currentTupleId = data.indexOf(countryData) + 1;
 
-                  worksheet.hoverTupleAsync(tupleId, { 
+                  worksheet.hoverTupleAsync(currentTupleId, { 
                     tooltipAnchorPoint: { x: mousePosition.x, y: mousePosition.y }
                   })
                   .then(() => console.log('Tooltip shown for:', countryName))
@@ -160,6 +161,12 @@ const GlobeViz = ({ data, config }) => {
               globe.polygonsData(validGeojson.filter(f => countryData.includes(f.properties.ADMIN)));
             }
         })
+        onPolygonLeave((polygon) => {
+            if (currentTupleId !== null) {
+              worksheet.hoverTupleAsync(null); // Очищаем tooltip
+              currentTupleId = null;
+            }
+          })
         .catch(err => {
           console.error('Error loading polygons:', err);
         });

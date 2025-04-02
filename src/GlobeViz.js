@@ -19,6 +19,14 @@ const GlobeViz = ({ data, config }) => {
     let countryName = null;
     let hoveredPolygon = null;
 
+    let mousePosition = { x: 0, y: 0 };
+
+    // update mouse position
+    document.addEventListener("mousemove", (event) => {
+      mousePosition.x = event.pageX;
+      mousePosition.y = event.pageY;
+    });
+
     try {
       const testCanvas = document.createElement('canvas');
       const gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
@@ -142,7 +150,7 @@ const GlobeViz = ({ data, config }) => {
                   const tupleId = countryData.id;
 
                   worksheet.hoverTupleAsync(tupleId, { 
-                    tooltipAnchorPoint: { x: event.pageX, y: event.pageY } 
+                    tooltipAnchorPoint: { x: mousePosition.x, y: mousePosition.y }
                   })
                   .then(() => console.log('Tooltip shown for:', countryName))
                   .catch((error) => console.log('Error hovering:', error));

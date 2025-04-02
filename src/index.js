@@ -71,7 +71,7 @@ function processTableauData(dataTable) {
             latitude: parseFloat(row[columns.indexOf(latField)].value),
             longitude: parseFloat(row[columns.indexOf(lonField)].value),
             size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,
-            color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
+            country: countryField && columns.includes(countryField) ? row[columns.indexOf(countryField)].value : null
         }));
         configType = "coordinates";
         console.log("coordinates");
@@ -80,7 +80,6 @@ function processTableauData(dataTable) {
         processedData = dataTable.data.map(row => ({
             country: row[columns.indexOf(countryField)].value,
             size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,
-            color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
         }));
         configType = "countries";
         console.log("countries");

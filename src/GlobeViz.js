@@ -126,7 +126,7 @@ const GlobeViz = ({ data, config }) => {
 
                 if (polygon && polygon.properties) {
                   const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
-                  console.log("polygon ", polygon.properties);
+                  console.log("countryName ", countryName);
 
                   const countryData = data.find(d => { 
                     if (d[config.country]) d[config.country].toLowerCase() === countryName.toLowerCase()

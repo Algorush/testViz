@@ -123,11 +123,11 @@ function populateDropdown(id, fieldNames, optional = false) {
 * Saves user selections to Tableau settings.
 */
 function saveConfig() {
-  tableau.extensions.settings.set("latitude", document.getElementById("latitude").value);
-  tableau.extensions.settings.set("longitude", document.getElementById("longitude").value);
-  tableau.extensions.settings.set("size", document.getElementById("size").value);
-  tableau.extensions.settings.set("color", document.getElementById("color").value);
-  tableau.extensions.settings.set("country", document.getElementById("country").value);
+  tableau.extensions.settings.set("latitude", document.getElementById("latitude").value.toLowerCase());
+  tableau.extensions.settings.set("longitude", document.getElementById("longitude").value.toLowerCase());
+  tableau.extensions.settings.set("size", document.getElementById("size").value.toLowerCase());
+  tableau.extensions.settings.set("color", document.getElementById("color").value.toLowerCase());
+  tableau.extensions.settings.set("country", document.getElementById("country").value.toLowerCase());
 
   tableau.extensions.settings.saveAsync().then(() => {
       console.log("Settings saved.");

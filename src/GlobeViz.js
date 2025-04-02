@@ -161,12 +161,6 @@ const GlobeViz = ({ data, config }) => {
               globe.polygonsData(validGeojson.filter(f => countryData.includes(f.properties.ADMIN)));
             }
         })
-        onPolygonLeave((polygon) => {
-            if (currentTupleId !== null) {
-              worksheet.hoverTupleAsync(null); // Очищаем tooltip
-              currentTupleId = null;
-            }
-          })
         .catch(err => {
           console.error('Error loading polygons:', err);
         });

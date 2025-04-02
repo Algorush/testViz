@@ -59,9 +59,9 @@
     
     <label for="longitude">Longitude Field:</label>
     <select id="longitude"></select>
-    
+<!--     
     <label for="color">Color Field:</label>
-    <select id="color"></select>
+    <select id="color"></select> -->
     
     <label for="size">Size Field:</label>
     <select id="size"></select>
@@ -85,7 +85,7 @@
         populateDropdown("latitude", fieldNames);
         populateDropdown("longitude", fieldNames);
         populateDropdown("size", fieldNames, true);
-        populateDropdown("color", fieldNames, true);
+        // populateDropdown("color", fieldNames, true);
         populateDropdown("country", fieldNames);
     }).catch(err => {
         console.error("Error fetching summary data:", err);
@@ -126,7 +126,7 @@ function saveConfig() {
   tableau.extensions.settings.set("latitude", document.getElementById("latitude").value);
   tableau.extensions.settings.set("longitude", document.getElementById("longitude").value);
   tableau.extensions.settings.set("size", document.getElementById("size").value);
-  tableau.extensions.settings.set("color", document.getElementById("color").value);
+  // tableau.extensions.settings.set("color", document.getElementById("color").value);
   tableau.extensions.settings.set("country", document.getElementById("country").value);
 
   tableau.extensions.settings.saveAsync().then(() => {

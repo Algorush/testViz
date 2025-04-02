@@ -54,7 +54,7 @@ window.onload = () => {
  * @returns {Object|null} Processed data object with type and formatted data or null if invalid.
  */
 function processTableauData(dataTable) {
-    const columns = dataTable.columns.map(col => col.fieldName);
+    const columns = dataTable.columns.map(col => col.fieldName.toLowerCase());
     console.log("Loaded fields:", columns);
 
     let latField = tableau.extensions.settings.get("latitude");

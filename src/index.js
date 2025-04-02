@@ -20,7 +20,7 @@ window.onload = () => {
           longitude: settings.longitude || "lng",
           country: settings.country || "Country",
           size: settings.size || null,
-          //color: settings.color || null,
+          color: settings.color || null,
           pointColor: settings.pointColor || "#ff6200",
           pointRadius: parseFloat(settings.pointRadius) || 0.3,
           pointAltitude: parseFloat(settings.pointAltitude) || 0.011,
@@ -59,9 +59,10 @@ function processTableauData(dataTable) {
     const latField = tableau.extensions.settings.get("latitude");
     const lonField = tableau.extensions.settings.get("longitude");
     const sizeField = tableau.extensions.settings.get("size");
-    //const colorField = tableau.extensions.settings.get("color");
+    const colorField = tableau.extensions.settings.get("color");
     const countryField = tableau.extensions.settings.get("country");
 
+    console.log(countryField)
     let processedData = [];
     let configType = "";
 
@@ -71,16 +72,17 @@ function processTableauData(dataTable) {
             latitude: parseFloat(row[columns.indexOf(latField)].value),
             longitude: parseFloat(row[columns.indexOf(lonField)].value),
             size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,
-            //color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
+            color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue",
+            country: countryField && columns.includes(countryField) ? row[columns.indexOf(countryField)].value : ""
         }));
         configType = "coordinates";
-        console.log("coordinates");
+        console.log(processedData);
     } else if (countryField && columns.includes(countryField)) {
         // Use country names
         processedData = dataTable.data.map(row => ({
             country: row[columns.indexOf(countryField)].value,
             size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,
-            //color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
+            color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
         }));
         configType = "countries";
         console.log("countries");

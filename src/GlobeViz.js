@@ -116,23 +116,7 @@ const GlobeViz = ({ data, config }) => {
             .onPolygonHover((polygon, event) => {
                 if (hoveredPolygon) {
                   hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgb(240, 240, 240)';
-                }
-                if (polygon && polygon.properties) {
-                  const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
-                  console.log("polygon ", polygon.properties);
-
-                  const countryData = data.find(d => d.name === countryName);
-
-                  if (!countryData) return;
-
-                  const tupleId = countryData.id;
-
-                  worksheet.hoverTupleAsync(tupleId, { 
-                    tooltipAnchorPoint: { x: event.pageX, y: event.pageY } 
-                  })
-                  .then(() => console.log('Tooltip shown for:', countryName))
-                  .catch((error) => console.log('Error hovering:', error));
-                }                
+                }           
 
                 hoveredPolygon = polygon;
             
@@ -140,8 +124,25 @@ const GlobeViz = ({ data, config }) => {
                   .polygonCapColor(d => (d === polygon ? 'rgb(255, 165, 0)' : d.__previousColor || 'rgb(240, 240, 240)'))
                   .polygonsTransitionDuration(200);
 
-              })
+                if (polygon && polygon.properties) {
+                  const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
+                  console.log("polygon ", polygon.properties);
 
+                  const countryData = data.find(d => d.name === countryName);
+
+                  console.log("countryData ", countryData);
+                  if (!countryData) return;                  
+
+                  console.log("countryData 2 ", countryData);
+                  const tupleId = countryData.id;
+
+                  worksheet.hoverTupleAsync(tupleId, { 
+                    tooltipAnchorPoint: { x: event.pageX, y: event.pageY } 
+                  })
+                  .then(() => console.log('Tooltip shown for:', countryName))
+                  .catch((error) => console.log('Error hovering:', error));
+                }     
+              })
 
             if (hasCountries) {
               const countryData = data.map(d => d[config.country]);

@@ -67,6 +67,9 @@ function processTableauData(dataTable) {
     let configType = "";
 
     if (latField && lonField && columns.includes(latField) && columns.includes(lonField)) {
+        if (countryField) {
+            countryField = countryField.toLowerCase();
+        }
         // Use latitude and longitude
         processedData = dataTable.data.map(row => ({
             latitude: parseFloat(row[columns.indexOf(latField)].value),
@@ -79,6 +82,7 @@ function processTableauData(dataTable) {
         console.log(processedData);
     } else if (countryField && columns.includes(countryField)) {
         // Use country names
+        countryField = countryField.toLowerCase();
         processedData = dataTable.data.map(row => ({
             country: row[columns.indexOf(countryField)].value,
             size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,

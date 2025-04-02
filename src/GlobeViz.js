@@ -121,7 +121,7 @@ const GlobeViz = ({ data, config }) => {
               countryName = null;
               applyTableauFilter(countryName);
             })
-            .onPolygonHover((polygon, event) => {
+            .onPolygonHover((polygon) => {
                 if (hoveredPolygon) {
                   hoveredPolygon.__previousColor = hoveredPolygon.__previousColor || 'rgb(240, 240, 240)';
                 }           
@@ -147,7 +147,7 @@ const GlobeViz = ({ data, config }) => {
                   if (!countryData) return;                  
 
                   console.log("countryData 2 ", countryData);
-                  const tupleId = countryData.id;
+                  const tupleId = data.length - data.indexOf(countryData);
 
                   worksheet.hoverTupleAsync(tupleId, { 
                     tooltipAnchorPoint: { x: mousePosition.x, y: mousePosition.y }

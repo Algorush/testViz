@@ -13,7 +13,7 @@ window.onload = () => {
         currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
         const settings = tableau.extensions.settings.getAll();
-        console.log("Settings:", settings);
+        
 
         config = {
           latitude: settings.latitude || "lat",
@@ -28,6 +28,7 @@ window.onload = () => {
           defaultAltitude: parseFloat(settings.defaultAltitude) || 2,
         };
 
+        console.log("Settings:", settings);
         currentWorksheet.getSummaryDataAsync()
           .then(dataTable => {
             console.log("Data table:", dataTable);

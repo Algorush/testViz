@@ -13,12 +13,12 @@ window.onload = () => {
         currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
         const settings = tableau.extensions.settings.getAll();
-        
+        console.log("Settings:", settings);
 
         config = {
           latitude: settings.latitude || "lat",
           longitude: settings.longitude || "lng",
-          country: settings.country.toLowerCase() || "country",
+          country: settings.country || "Country",
           size: settings.size || null,
           color: settings.color || null,
           pointColor: settings.pointColor || "#ff6200",
@@ -28,7 +28,6 @@ window.onload = () => {
           defaultAltitude: parseFloat(settings.defaultAltitude) || 2,
         };
 
-        console.log("Settings:", settings);
         currentWorksheet.getSummaryDataAsync()
           .then(dataTable => {
             console.log("Data table:", dataTable);
@@ -54,36 +53,30 @@ window.onload = () => {
  * @returns {Object|null} Processed data object with type and formatted data or null if invalid.
  */
 function processTableauData(dataTable) {
-    const columns = dataTable.columns.map(col => col.fieldName.toLowerCase());
+    const columns = dataTable.columns.map(col => col.fieldName);
     console.log("Loaded fields:", columns);
 
-    let latField = tableau.extensions.settings.get("latitude");
-    let lonField = tableau.extensions.settings.get("longitude");
-    let sizeField = tableau.extensions.settings.get("size");
-    let colorField = tableau.extensions.settings.get("color");
-    let countryField = tableau.extensions.settings.get("country");
+    const latField = tableau.extensions.settings.get("latitude");
+    const lonField = tableau.extensions.settings.get("longitude");
+    const sizeField = tableau.extensions.settings.get("size");
+    const colorField = tableau.extensions.settings.get("color");
+    const countryField = tableau.extensions.settings.get("country");
 
-    console.log(countryField)
     let processedData = [];
     let configType = "";
 
     if (latField && lonField && columns.includes(latField) && columns.includes(lonField)) {
-        if (countryField) {
-            countryField = countryField.toLowerCase();
-        }
         // Use latitude and longitude
         processedData = dataTable.data.map(row => ({
             latitude: parseFloat(row[columns.indexOf(latField)].value),
             longitude: parseFloat(row[columns.indexOf(lonField)].value),
             size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,
-            color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue",
-            country: countryField && columns.includes(countryField) ? row[columns.indexOf(countryField)].value : ""
+            color: colorField && columns.includes(colorField) ? row[columns.indexOf(colorField)].value : "blue"
         }));
         configType = "coordinates";
-        console.log(processedData);
+        console.log("coordinates");
     } else if (countryField && columns.includes(countryField)) {
         // Use country names
-        countryField = countryField.toLowerCase();
         processedData = dataTable.data.map(row => ({
             country: row[columns.indexOf(countryField)].value,
             size: sizeField && columns.includes(sizeField) ? parseFloat(row[columns.indexOf(sizeField)].value) : 1,

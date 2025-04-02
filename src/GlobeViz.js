@@ -145,7 +145,7 @@ const GlobeViz = ({ data, config }) => {
 
                   if (!countryData) return;                  
 
-                  const tupleId = data.indexOf(countryData) - 1;
+                  const tupleId = data.indexOf(countryData) + 1;
 
                   worksheet.hoverTupleAsync(tupleId, { 
                     tooltipAnchorPoint: { x: mousePosition.x, y: mousePosition.y }

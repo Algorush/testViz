@@ -130,7 +130,9 @@ const GlobeViz = ({ data, config }) => {
 
                   const countryData = data.find(d => { 
                     const countryFiled = config.country.toLowerCase();
-                    if (d[countryFiled]) d[countryFiled].toLowerCase() === countryName.toLowerCase()
+                    if (d[countryFiled]) {
+                      return d[countryFiled].toLowerCase() === countryName.toLowerCase()
+                    }
                   });
 
                   console.log("countryData ", countryData);

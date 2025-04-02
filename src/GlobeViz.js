@@ -128,7 +128,7 @@ const GlobeViz = ({ data, config }) => {
                   const countryName = polygon.properties.ADMIN || polygon.properties.NAME;
                   console.log("polygon ", polygon.properties);
 
-                  const countryData = data.find(d => d.name === countryName);
+                  const countryData = data.find(d => d[config.country] === countryName);
 
                   console.log("countryData ", countryData);
                   if (!countryData) return;                  

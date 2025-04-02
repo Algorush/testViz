@@ -18,7 +18,7 @@ window.onload = () => {
         config = {
           latitude: settings.latitude || "lat",
           longitude: settings.longitude || "lng",
-          country: settings.country || "country",
+          country: settings.country.toLowerCase() || "country",
           size: settings.size || null,
           color: settings.color || null,
           pointColor: settings.pointColor || "#ff6200",

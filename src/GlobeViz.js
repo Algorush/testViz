@@ -143,11 +143,9 @@ const GlobeViz = ({ data, config }) => {
                     }
                   });
 
-                  console.log("countryData ", countryData);
                   if (!countryData) return;                  
 
-                  console.log("countryData 2 ", countryData);
-                  const tupleId = data.length - data.indexOf(countryData);
+                  const tupleId = data.indexOf(countryData);
 
                   worksheet.hoverTupleAsync(tupleId, { 
                     tooltipAnchorPoint: { x: mousePosition.x, y: mousePosition.y }

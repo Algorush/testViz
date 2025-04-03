@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import Globe from 'globe.gl';
-// import { scaleLinear, scaleOrdinal } from 'd3-scale';
-// import { schemeCategory10 } from 'd3-scale-chromatic';
 
 const GlobeViz = ({ data, config }) => {
   const globeEl = useRef();
@@ -219,22 +217,6 @@ const GlobeViz = ({ data, config }) => {
         });
     }
     return { lat: latSum / count, lng: lngSum / count };
-}
-
-function showTableauTooltip(country, event) {
-  worksheet.getTooltipTextAsync({ fieldName: "Country", value: country })
-  .then(tooltipText => {
-    console.log("tooltipText ", tooltipText);
-    console.log("event ", event);
-    const tooltip = document.getElementById("tooltip");
-    tooltip.innerHTML = tooltipText;
-    tooltip.style.left = `${event.pageX + 10}px`;
-    tooltip.style.top = `${event.pageY + 10}px`;
-    tooltip.style.display = "block";
-  })
-  .catch(err => {
-      console.error("Error fetching tooltip:", err);
-  });
 }
 
   const applyTableauFilter = (countryName) => {

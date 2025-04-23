@@ -75,13 +75,13 @@
   tableau.extensions.initializeDialogAsync().then(() => {
     console.log("Config dialog initialized.");
 
+    var currentWorksheet = tableau.extensions.worksheetContent.worksheet;
+
     const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
-    var currentConfig = fullConfig[currentWorksheet.name] || {};
-    
-    const worksheet = tableau.extensions.worksheetContent.worksheet;
+    var currentConfig = fullConfig[currentWorksheet.name] || {};    
 
     // get field names
-    worksheet.getSummaryDataAsync().then(summaryData => {
+    currentWorksheet.getSummaryDataAsync().then(summaryData => {
         const fieldNames = summaryData.columns.map(col => col.fieldName);
         console.log("Available fields:", fieldNames);
 

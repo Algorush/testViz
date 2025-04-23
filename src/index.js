@@ -13,19 +13,23 @@ window.onload = () => {
         currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
         const settings = tableau.extensions.settings.getAll();
+
+        const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
+        const currentConfig = fullConfig[currentWorksheet.name] || {};
+
         console.log("Settings:", settings);
 
         config = {
-          latitude: settings.latitude || "lat",
-          longitude: settings.longitude || "lng",
-          country: settings.country || "Country",
-          size: settings.size || null,
-          color: settings.color || null,
-          pointColor: settings.pointColor || "#ff6200",
-          pointRadius: parseFloat(settings.pointRadius) || 0.3,
-          pointAltitude: parseFloat(settings.pointAltitude) || 0.011,
-          zoomAltitude: parseFloat(settings.zoomAltitude) || 0.7,
-          defaultAltitude: parseFloat(settings.defaultAltitude) || 2,
+          latitude: currentConfig.latitude || "lat",
+          longitude: currentConfig.longitude || "lng",
+          country: currentConfig.country || "Country",
+          size: currentConfig.size || null,
+          color: currentConfig.color || null,
+          pointColor: currentConfig.pointColor || "#ff6200",
+          pointRadius: parseFloat(currentConfig.pointRadius) || 0.3,
+          pointAltitude: parseFloat(currentConfig.pointAltitude) || 0.011,
+          zoomAltitude: parseFloat(currentConfig.zoomAltitude) || 0.7,
+          defaultAltitude: parseFloat(currentConfig.defaultAltitude) || 2,
         };
 
         currentWorksheet.getSummaryDataAsync()

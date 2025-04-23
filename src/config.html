@@ -75,6 +75,9 @@
   tableau.extensions.initializeDialogAsync().then(() => {
     console.log("Config dialog initialized.");
 
+    const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
+    var currentConfig = fullConfig[currentWorksheet.name] || {};
+    
     const worksheet = tableau.extensions.worksheetContent.worksheet;
 
     // get field names
@@ -113,7 +116,8 @@ function populateDropdown(id, fieldNames, optional = false) {
   });
 
   // Restore previous selection
-  const savedValue = tableau.extensions.settings.get(id);
+  const savedValue = currentConfig.get(id);
+
   if (savedValue) {
       select.value = savedValue;
   }
@@ -123,12 +127,17 @@ function populateDropdown(id, fieldNames, optional = false) {
 * Saves user selections to Tableau settings.
 */
 function saveConfig() {
-  tableau.extensions.settings.set("Latitude", document.getElementById("latitude").value);
-  tableau.extensions.settings.set("Longitude", document.getElementById("longitude").value);
-  tableau.extensions.settings.set("Size", document.getElementById("size").value);
-  tableau.extensions.settings.set("Color", document.getElementById("color").value);
-  tableau.extensions.settings.set("Country", document.getElementById("country").value);
-  
+  currentConfig.set("Latitude", document.getElementById("latitude").value);
+  currentConfig.set("Longitude", document.getElementById("longitude").value);
+  currentConfig.set("Size", document.getElementById("size").value);
+  currentConfig.set("Color", document.getElementById("color").value);
+  currentConfig.set("Country", document.getElementById("country").value);
+
+  const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
+  fullConfig[currentWorksheet.name] = currentConfig;
+
+  tableau.extensions.settings.set("config", JSON.stringify(fullConfig));
+
   tableau.extensions.settings.saveAsync().then(() => {
       console.log("Settings saved.");
       tableau.extensions.ui.closeDialog("");

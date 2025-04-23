@@ -61,7 +61,7 @@ function processTableauData(dataTable) {
     console.log("Loaded fields:", columns);
 
     const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
-    currentConfig = fullConfig[currentWorksheet.name] || {};   
+    const currentConfig = fullConfig[currentWorksheet.name] || {};   
 
     const latField = currentConfig.latitude;
     const lonField = currentConfig.longitude;

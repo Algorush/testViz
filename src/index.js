@@ -108,12 +108,13 @@ function processTableauData(dataTable) {
 function configure() {
     tableau.extensions.ui.displayDialogAsync("config.html", "", { height: 500, width: 400 })
         .then(() => {
-          updateWorksheet();
+          
           console.log("Configuration saved, reloading data...");
             
         })
         .catch((err) => {
           if (err.errorCode === tableau.ErrorCodes.DialogClosedByUser) {
+            updateWorksheet();
             console.warn("User closed the configuration dialog.");
           } else {
             console.error("Error opening config.html:", err.message);

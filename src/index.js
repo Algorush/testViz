@@ -112,8 +112,12 @@ function configure() {
           console.log("Configuration saved, reloading data...");
             
         })
-        .catch(err => {            
-          console.error("Configuration error:", err);            
+        .catch((err) => {
+          if (err.errorCode === tableau.ErrorCodes.DialogClosedByUser) {
+            console.warn("User closed the configuration dialog.");
+          } else {
+            console.error("Error opening config.html:", err.message);
+          }
         });
 }
 

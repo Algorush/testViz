@@ -32,25 +32,28 @@ window.onload = () => {
           defaultAltitude: parseFloat(currentConfig.defaultAltitude) || 2,
         };
 
-        currentWorksheet.getSummaryDataAsync()
-          .then(dataTable => {
-            console.log("Data table:", dataTable);
-              const processedData = processTableauData(dataTable);
-
-              if (!processedData) {
-                  console.warn("No suitable data found. Please open settings.");
-                  return;
-              }
-
-              console.log(`Data prepared for rendering (${processedData.type}):`, processedData.data);
-              config.type = processedData.type;
-              renderGlobe(processedData.data, config);
-          })
-          .catch(err => console.error("Error fetching data:", err));
+        updateWorksheet();
     })
     .catch(err => console.error("Tableau Extension initialization error:", err));
 }
 
+function updateWorksheet() {
+  currentWorksheet.getSummaryDataAsync()
+  .then(dataTable => {
+    console.log("Data table:", dataTable);
+      const processedData = processTableauData(dataTable);
+
+      if (!processedData) {
+          console.warn("No suitable data found. Please open settings.");
+          return;
+      }
+
+      console.log(`Data prepared for rendering (${processedData.type}):`, processedData.data);
+      config.type = processedData.type;
+      renderGlobe(processedData.data, config);
+  })
+  .catch(err => console.error("Error fetching data:", err));
+}
 /**
  * Processes Tableau worksheet data and determines whether to use latitude/longitude or country names.
  * @param {Object} dataTable - Tableau dataTable object.
@@ -104,6 +107,7 @@ function processTableauData(dataTable) {
 function configure() {
     tableau.extensions.ui.displayDialogAsync("config.html", "", { height: 500, width: 400 })
         .then(() => {
+          updateWorksheet();
           console.log("Configuration saved, reloading data...");
             
         })

@@ -20,8 +20,8 @@ window.onload = () => {
         console.log("Settings:", settings);
 
         config = {
-          latitude: currentConfig.latitude || "lat",
-          longitude: currentConfig.longitude || "lng",
+          latitude: currentConfig.latitude || "Latitude",
+          longitude: currentConfig.longitude || "Longitude",
           country: currentConfig.country || "Country",
           size: currentConfig.size || null,
           color: currentConfig.color || null,

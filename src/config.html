@@ -116,7 +116,7 @@ function populateDropdown(id, fieldNames, optional = false) {
   });
 
   // Restore previous selection
-  const savedValue = currentConfig.get(id);
+  const savedValue = currentConfig[id];
 
   if (savedValue) {
       select.value = savedValue;
@@ -127,11 +127,11 @@ function populateDropdown(id, fieldNames, optional = false) {
 * Saves user selections to Tableau settings.
 */
 function saveConfig() {
-  currentConfig.set("Latitude", document.getElementById("latitude").value);
-  currentConfig.set("Longitude", document.getElementById("longitude").value);
-  currentConfig.set("Size", document.getElementById("size").value);
-  currentConfig.set("Color", document.getElementById("color").value);
-  currentConfig.set("Country", document.getElementById("country").value);
+  currentConfig["Latitude"] = document.getElementById("latitude").value;
+  currentConfig["Longitude"] = document.getElementById("longitude").value;
+  currentConfig["Size"] = document.getElementById("size").value;
+  currentConfig["Color"] = document.getElementById("color").value;  
+  currentConfig["Country"] = document.getElementById("country").value;
 
   const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
   fullConfig[currentWorksheet.name] = currentConfig;

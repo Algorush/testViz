@@ -140,10 +140,7 @@ function saveConfig() {
 
   tableau.extensions.settings.set("config", JSON.stringify(fullConfig));
 
-  tableau.extensions.settings.saveAsync().then(() => {
-      console.log("Settings saved.");
-      tableau.extensions.ui.closeDialog("");
-  });
+  tableau.extensions.ui.closeDialog();
 }
 </script>
 </html>

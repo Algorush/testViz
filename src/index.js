@@ -12,32 +12,38 @@ window.onload = () => {
 
         currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
-        const settings = tableau.extensions.settings.getAll();
-
-        const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
-        const currentConfig = fullConfig[currentWorksheet.name] || {};
-
-        console.log("Settings:", settings);
-
-        config = {
-          latitude: currentConfig.latitude || "Latitude",
-          longitude: currentConfig.longitude || "Longitude",
-          country: currentConfig.country || "Country",
-          size: currentConfig.size || null,
-          color: currentConfig.color || null,
-          pointColor: currentConfig.pointColor || "#ff6200",
-          pointRadius: parseFloat(currentConfig.pointRadius) || 0.3,
-          pointAltitude: parseFloat(currentConfig.pointAltitude) || 0.011,
-          zoomAltitude: parseFloat(currentConfig.zoomAltitude) || 0.7,
-          defaultAltitude: parseFloat(currentConfig.defaultAltitude) || 2,
-        };
+        tableau.extensions.settings.addEventListener(tableau.TableauEventType.SettingsChanged, (settingsEvent) => {
+          const settings = settingsEvent.newSettings ?? {};
+          view.render(info, UpdateType.Settings);
+          updateWorksheet(settings);
+        });
 
         updateWorksheet();
     })
     .catch(err => console.error("Tableau Extension initialization error:", err));
 }
 
-function updateWorksheet() {
+function updateWorksheet(settings) {
+  const settings = settings || tableau.extensions.settings.getAll();
+
+  console.log("Settings:", settings);
+
+  const fullConfig = JSON.parse(settings.get("config") || "{}");
+  const currentConfig = fullConfig[currentWorksheet.name] || {};  
+
+  config = {
+    latitude: currentConfig.latitude || "Latitude",
+    longitude: currentConfig.longitude || "Longitude",
+    country: currentConfig.country || "Country",
+    size: currentConfig.size || null,
+    color: currentConfig.color || null,
+    pointColor: currentConfig.pointColor || "#ff6200",
+    pointRadius: parseFloat(currentConfig.pointRadius) || 0.3,
+    pointAltitude: parseFloat(currentConfig.pointAltitude) || 0.011,
+    zoomAltitude: parseFloat(currentConfig.zoomAltitude) || 0.7,
+    defaultAltitude: parseFloat(currentConfig.defaultAltitude) || 2,
+  };
+
   currentWorksheet.getSummaryDataAsync()
   .then(dataTable => {
     console.log("Data table:", dataTable);

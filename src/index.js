@@ -31,6 +31,7 @@ function updateWorksheet(settings) {
   const fullConfig = JSON.parse(settings.get("config") || "{}");
   const currentConfig = fullConfig[currentWorksheet.name] || {};  
 
+  console.log("fullConfig updateWorksheet: ", fullConfig);
   config = {
     latitude: currentConfig.latitude || "Latitude",
     longitude: currentConfig.longitude || "Longitude",

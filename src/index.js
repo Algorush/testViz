@@ -14,6 +14,7 @@ window.onload = () => {
 
         tableau.extensions.settings.addEventListener(tableau.TableauEventType.SettingsChanged, (settingsEvent) => {
           const settings = settingsEvent.newSettings ?? {};
+          console.log("Settings changed:", settings);
           view.render(info, UpdateType.Settings);
           updateWorksheet(settings);
         });

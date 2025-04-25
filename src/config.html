@@ -79,7 +79,7 @@
 
     currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
-    const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
+    const fullConfig = tableau.extensions.settings.get("config") || {};
     console.log("Full config:", fullConfig);
     console.log("Current worksheet name:", currentWorksheet.name);
     currentConfig = fullConfig[currentWorksheet.name] || {};    
@@ -143,7 +143,7 @@ function saveConfig() {
   fullConfig[currentWorksheet.name] = currentConfig;
   console.log("Full config:", fullConfig);
 
-  tableau.extensions.settings.set("config", JSON.stringify(fullConfig));
+  tableau.extensions.settings.set("config", fullConfig);
 
   tableau.extensions.ui.closeDialog();
 }

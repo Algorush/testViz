@@ -118,6 +118,8 @@ function populateDropdown(id, fieldNames, optional = false) {
   });
 
   // Restore previous selection
+  console.log("Current config:", currentConfig);
+  console.log("Current config id:", id.charAt(0).toLowerCase() + id.slice(1))
   const savedValue = currentConfig[id.charAt(0).toLowerCase() + id.slice(1)];
 
   if (savedValue) {

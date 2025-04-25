@@ -80,6 +80,8 @@
     currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
     const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
+    console.log("Full config:", fullConfig);
+    console.log("Current worksheet name:", currentWorksheet.name);
     currentConfig = fullConfig[currentWorksheet.name] || {};    
 
     // get field names

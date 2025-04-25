@@ -67,11 +67,11 @@ function processTableauData(dataTable) {
     const currentConfig = fullConfig[currentWorksheet.name] || {};   
 
     console.log("Current config:", currentConfig);
-    const latField = currentConfig.latitude;
-    const lonField = currentConfig.longitude;
+    const latField = currentConfig.latitude && a.find(colName => colName.match(/(L|l)atitude/));
+    const lonField = currentConfig.longitude && a.find(colName => colName.match(/(L|l)ongitude/));
     const sizeField = currentConfig.size;
     const colorField = currentConfig.color;
-    const countryField = currentConfig.country;
+    const countryField = currentConfig.country && a.find(colName => colName.match(/(C|c)ountry/));
 
     let processedData = [];
     let configType = "";

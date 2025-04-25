@@ -145,11 +145,7 @@ function saveConfig() {
 
   tableau.extensions.settings.set("config", fullConfig);
 
-  setTimeout(() => {
-    tableau.extensions.ui.closeDialog();
-  }, 5000);
-
-  
+  tableau.extensions.ui.closeDialog();
 }
 </script>
 </html>

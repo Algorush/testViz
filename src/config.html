@@ -141,6 +141,7 @@ function saveConfig() {
 
   const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
   fullConfig[currentWorksheet.name] = currentConfig;
+  console.log("Full config:", fullConfig);
 
   tableau.extensions.settings.set("config", JSON.stringify(fullConfig));
 

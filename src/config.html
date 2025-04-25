@@ -78,8 +78,9 @@
     console.log("Config dialog initialized.");
 
     currentWorksheet = tableau.extensions.worksheetContent.worksheet;
+    const settings = tableau.extensions.settings.getAll();
 
-    const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
+    const fullConfig = JSON.parse(settings.get("config") || "{}");
     console.log("Full config:", fullConfig);
     console.log("Current worksheet name:", currentWorksheet.name);
     currentConfig = fullConfig[currentWorksheet.name] || {};    

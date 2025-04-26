@@ -126,7 +126,8 @@ function populateDropdown(id, fieldNames, optional = false) {
   const savedValue = currentConfig[id];
 
   if (savedValue) {
-      select.value = savedValue;
+    console.log("Found saved value:", savedValue);
+    select.value = savedValue;
   }
 }
 

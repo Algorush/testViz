@@ -80,10 +80,11 @@
     currentWorksheet = tableau.extensions.worksheetContent.worksheet;
     const settings = tableau.extensions.settings.getAll();
 
+    console.log("Settings config:", settings);
     const fullConfig = JSON.parse(settings["config"] || "{}");
     console.log("Full config:", fullConfig);
     console.log("Current worksheet name:", currentWorksheet.name);
-    currentConfig = fullConfig[currentWorksheet.name] || {};    
+    currentConfig = fullConfig[currentWorksheet.name] || {};
 
     // get field names
     currentWorksheet.getSummaryDataAsync().then(summaryData => {

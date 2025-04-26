@@ -123,10 +123,12 @@ function populateDropdown(id, fieldNames, optional = false) {
 
   // Restore previous selection
   console.log("Current config:", currentConfig);
+  console.log("id:", id);
   const savedValue = currentConfig[id];
 
+  console.log("Found saved value:", savedValue);
   if (savedValue) {
-    console.log("Found saved value:", savedValue);
+    
     select.value = savedValue;
   }
 }

@@ -29,7 +29,7 @@ function updateWorksheet(settings) {
 
   console.log("Settings:", newSettings);
 
-  const fullConfig = JSON.parse(newSettings.get("config") || "{}");
+  const fullConfig = JSON.parse(newSettings["config"]|| "{}");
   const currentConfig = fullConfig[currentWorksheet.name] || {};  
 
   console.log("fullConfig updateWorksheet: ", fullConfig);

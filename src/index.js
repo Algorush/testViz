@@ -25,11 +25,11 @@ window.onload = () => {
 }
 
 function updateWorksheet(settings) {
-  const settings = settings || tableau.extensions.settings.getAll();
+  const newSettings = settings || tableau.extensions.settings.getAll();
 
-  console.log("Settings:", settings);
+  console.log("Settings:", newSettings);
 
-  const fullConfig = JSON.parse(settings.get("config") || "{}");
+  const fullConfig = JSON.parse(newSettings.get("config") || "{}");
   const currentConfig = fullConfig[currentWorksheet.name] || {};  
 
   console.log("fullConfig updateWorksheet: ", fullConfig);

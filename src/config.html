@@ -123,8 +123,8 @@ function populateDropdown(id, fieldNames, optional = false) {
 
   // Restore previous selection
   console.log("Current config:", currentConfig);
-  console.log("id:", id);
-  const savedValue = currentConfig[id];
+  console.log("id:", id[0].toLocaleUpperCase() + id.slice(1));
+  const savedValue = currentConfig[id[0].toLocaleUpperCase() + id.slice(1)];
 
   console.log("Found saved value:", savedValue);
   if (savedValue) {

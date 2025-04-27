@@ -194,7 +194,7 @@ const GlobeViz = ({ data, config }) => {
         }
       });
 
-      resizeObserver.observe(containerRef.current);
+      resizeObserver.observe(document.body);
 
       // Clean up
       return () => {

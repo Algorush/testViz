@@ -14,16 +14,17 @@ export async function initExtension() {
 
       currentWorksheet = tableau.extensions.worksheetContent.worksheet;
 
+      tableau.extensions.settings.addEventListener(tableau.TableauEventType.SettingsChanged, (settingsEvent) => {
+        const settings = settingsEvent.newSettings ?? {};
+        console.log("Settings changed:", settings);
+        renderGlobe(processedData, config);
+        updateWorksheet(settings);
+      });
+      
       updateWorksheet();
   })
   .catch(err => console.error("Tableau Extension initialization error:", err));
 
-  tableau.extensions.settings.addEventListener(tableau.TableauEventType.SettingsChanged, (settingsEvent) => {
-    const settings = settingsEvent.newSettings ?? {};
-    console.log("Settings changed:", settings);
-    renderGlobe(processedData, config);
-    updateWorksheet(settings);
-  });
 
   function updateWorksheet(settings) {
     const newSettings = settings || tableau.extensions.settings.getAll();

@@ -4,56 +4,74 @@ import Globe from "./GlobeViz";
 
 var config = {};
 var currentWorksheet = null;
+var processedData = [];
+
+export async function initExtension() {
+  let vizRendered = false;
+  tableau.extensions.initializeAsync({ configure: configure })
+  .then(() => {
+      console.log("Tableau Extension initialized");
+
+      currentWorksheet = tableau.extensions.worksheetContent.worksheet;
+
+      updateWorksheet();
+  })
+  .catch(err => console.error("Tableau Extension initialization error:", err));
+
+  tableau.extensions.settings.addEventListener(tableau.TableauEventType.SettingsChanged, (settingsEvent) => {
+    const settings = settingsEvent.newSettings ?? {};
+    console.log("Settings changed:", settings);
+    renderGlobe(processedData, config);
+    updateWorksheet(settings);
+  });
+
+  function updateWorksheet(settings) {
+    const newSettings = settings || tableau.extensions.settings.getAll();
+  
+    const fullConfig = JSON.parse(newSettings["config"]|| "{}");
+    const currentConfig = fullConfig[currentWorksheet.name] || {};  
+  
+    config = {
+      latitude: currentConfig.latitude || "Latitude",
+      longitude: currentConfig.longitude || "Longitude",
+      country: currentConfig.country || "Country",
+      size: currentConfig.size || null,
+      color: currentConfig.color || null,
+      pointColor: currentConfig.pointColor || "#ff6200",
+      pointRadius: parseFloat(currentConfig.pointRadius) || 0.3,
+      pointAltitude: parseFloat(currentConfig.pointAltitude) || 0.011,
+      zoomAltitude: parseFloat(currentConfig.zoomAltitude) || 0.7,
+      defaultAltitude: parseFloat(currentConfig.defaultAltitude) || 2,
+    };
+  
+    currentWorksheet.getSummaryDataAsync()
+    .then(dataTable => {
+      console.log("Data table:", dataTable);
+        const processedData = processTableauData(dataTable);
+  
+        if (!processedData) {
+            console.warn("No suitable data found. Please open settings.");
+            return;
+        }
+  
+        console.log(`Data prepared for rendering (${processedData.type}):`, processedData.data);
+        config.type = processedData.type;
+        renderGlobe(processedData.data, config);
+        vizRendered = true;
+    })
+    .catch(err => console.error("Error fetching data:", err));
+  }
+
+  // Setup interactivity events
+  onresize = () => {
+    if (vizRendered) renderGlobe(processedData, config);
+  };
+}
 
 window.onload = () => {
-  tableau.extensions.initializeAsync({ configure: configure })
-    .then(() => {
-        console.log("Tableau Extension initialized");
-
-        currentWorksheet = tableau.extensions.worksheetContent.worksheet;
-
-        const settings = tableau.extensions.settings.getAll();
-
-        const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");
-        const currentConfig = fullConfig[currentWorksheet.name] || {};
-
-        console.log("Settings:", settings);
-
-        config = {
-          latitude: currentConfig.latitude || "Latitude",
-          longitude: currentConfig.longitude || "Longitude",
-          country: currentConfig.country || "Country",
-          size: currentConfig.size || null,
-          color: currentConfig.color || null,
-          pointColor: currentConfig.pointColor || "#ff6200",
-          pointRadius: parseFloat(currentConfig.pointRadius) || 0.3,
-          pointAltitude: parseFloat(currentConfig.pointAltitude) || 0.011,
-          zoomAltitude: parseFloat(currentConfig.zoomAltitude) || 0.7,
-          defaultAltitude: parseFloat(currentConfig.defaultAltitude) || 2,
-        };
-
-        updateWorksheet();
-    })
-    .catch(err => console.error("Tableau Extension initialization error:", err));
+  initExtension(tableau.extensions.view);
 }
 
-function updateWorksheet() {
-  currentWorksheet.getSummaryDataAsync()
-  .then(dataTable => {
-    console.log("Data table:", dataTable);
-      const processedData = processTableauData(dataTable);
-
-      if (!processedData) {
-          console.warn("No suitable data found. Please open settings.");
-          return;
-      }
-
-      console.log(`Data prepared for rendering (${processedData.type}):`, processedData.data);
-      config.type = processedData.type;
-      renderGlobe(processedData.data, config);
-  })
-  .catch(err => console.error("Error fetching data:", err));
-}
 /**
  * Processes Tableau worksheet data and determines whether to use latitude/longitude or country names.
  * @param {Object} dataTable - Tableau dataTable object.
@@ -73,7 +91,6 @@ function processTableauData(dataTable) {
     const colorField = currentConfig.color;
     const countryField = currentConfig.country && a.find(colName => colName.match(/(C|c)ountry/));
 
-    let processedData = [];
     let configType = "";
 
     if (latField && lonField && columns.includes(latField) && columns.includes(lonField)) {
@@ -114,7 +131,7 @@ function configure() {
         })
         .catch((err) => {
           if (err.errorCode === tableau.ErrorCodes.DialogClosedByUser) {
-            updateWorksheet();
+            //updateWorksheet();
             console.warn("User closed the configuration dialog.");
           } else {
             console.error("Error opening config.html:", err.message);

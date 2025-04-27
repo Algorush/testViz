@@ -25,7 +25,6 @@ export async function initExtension() {
   })
   .catch(err => console.error("Tableau Extension initialization error:", err));
 
-
   function updateWorksheet(settings) {
     const newSettings = settings || tableau.extensions.settings.getAll();
   

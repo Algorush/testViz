@@ -127,7 +127,7 @@ function populateDropdown(id, fieldNames, optional = false) {
 /**
 * Saves user selections to Tableau settings.
 */
-function saveConfig() {
+async function saveConfig() {
   currentConfig["Latitude"] = document.getElementById("latitude").value;
   currentConfig["Longitude"] = document.getElementById("longitude").value;
   currentConfig["Size"] = document.getElementById("size").value;
@@ -138,6 +138,7 @@ function saveConfig() {
   fullConfig[currentWorksheet.name] = currentConfig;
 
   tableau.extensions.settings.set("config", JSON.stringify(fullConfig));
+  await tableau.extensions.settings.saveAsync();
 
   tableau.extensions.ui.closeDialog();
 }

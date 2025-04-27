@@ -175,22 +175,26 @@ const GlobeViz = ({ data, config }) => {
       // Resize handler
       const handleResize = () => {
         if (containerRef.current && globeEl.current) {
-          console.log("Container width:", containerRef.current.clientWidth);
-          console.log("Container height:", containerRef.current.clientHeight);
-          console.log("Globe width:", globeEl.current.width());
-          console.log("Globe height:", globeEl.current.height());
           const width = containerRef.current.clientWidth;
           const height = containerRef.current.clientHeight;
           globeEl.current.width(width);
           globeEl.current.height(height);
-          console.log("Container width:", containerRef.current.clientWidth);
-          console.log("Container height:", containerRef.current.clientHeight);
-          console.log("Globe width:", globeEl.current.width());
-          console.log("Globe height:", globeEl.current.height());
         }
       };
       window.addEventListener('resize', handleResize);
       handleResize(); // Initial resize
+
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          const { width, height } = entry.contentRect;
+          console.log('Container resized:', width, height);
+          globeEl.current.width(width);
+          globeEl.current.height(height);
+          globe.width(width).height(height);
+        }
+      });
+
+      resizeObserver.observe(containerRef.current);
 
       // Clean up
       return () => {

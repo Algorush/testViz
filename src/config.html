@@ -75,10 +75,15 @@
   var currentWorksheet = null;
   var currentConfig = {};
   tableau.extensions.initializeDialogAsync().then(() => {
+    console.log("Config dialog initialized.");
 
     currentWorksheet = tableau.extensions.worksheetContent.worksheet;
+    const settings = tableau.extensions.settings.getAll();
 
+    console.log("Settings config:", settings);
     const fullConfig = JSON.parse(settings["config"] || "{}");
+    console.log("Full config:", fullConfig);
+    console.log("Current worksheet name:", currentWorksheet.name);
     currentConfig = fullConfig[currentWorksheet.name] || {};
 
     // get field names
@@ -117,9 +122,13 @@ function populateDropdown(id, fieldNames, optional = false) {
   });
 
   // Restore previous selection
+  console.log("Current config:", currentConfig);
+  console.log("id:", id[0].toLocaleUpperCase() + id.slice(1));
   const savedValue = currentConfig[id[0].toLocaleUpperCase() + id.slice(1)];
 
-  if (savedValue) {    
+  console.log("Found saved value:", savedValue);
+  if (savedValue) {
+    
     select.value = savedValue;
   }
 }

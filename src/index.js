@@ -69,7 +69,7 @@ export async function initExtension() {
 }
 
 window.onload = () => {
-  initExtension(tableau.extensions.view);
+  initExtension();
 }
 
 /**

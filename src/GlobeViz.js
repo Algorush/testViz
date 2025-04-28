@@ -54,6 +54,7 @@ const GlobeViz = ({ data, config }) => {
         const oceanColor = config.oceanColor || 'black';
         globeMaterial.color.set(oceanColor);
 
+        window.globe = globe;
       // Optional size scaling
       if (config.size) {
         const sizes = data.map(d => parseFloat(d[config.size]));

@@ -37,6 +37,8 @@ export async function initExtension() {
       country: currentConfig.country || "Country",
       size: currentConfig.size || null,
       color: currentConfig.color || null,
+      oceanColor: currentConfig.oceanColor || '#000080',
+      hoverColor: currentConfig.hoverColor || '#FF0000',
       pointColor: currentConfig.pointColor || "#ff6200",
       pointRadius: parseFloat(currentConfig.pointRadius) || 0.3,
       pointAltitude: parseFloat(currentConfig.pointAltitude) || 0.011,

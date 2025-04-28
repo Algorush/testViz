@@ -60,8 +60,11 @@
     <label for="longitude">Longitude Field:</label>
     <select id="longitude"></select>
     
-    <label for="color">Color Field:</label>
-    <select id="color"></select>
+    <label>Ocean Color:</label>
+    <input type="color" id="oceanColorPicker" value="#000080">
+    
+    <label>Hover Color:</label>
+    <input type="color" id="hoverColorPicker" value="#FF0000">
     
     <label for="size">Size Field:</label>
     <select id="size"></select>
@@ -94,8 +97,12 @@
         populateDropdown("latitude", fieldNames);
         populateDropdown("longitude", fieldNames);
         populateDropdown("size", fieldNames, true);
-        populateDropdown("color", fieldNames, true);
+
+        document.getElementById('oceanColorPicker').value = currentConfig.oceanColor || '#000080';
+        document.getElementById('hoverColorPicker').value = currentConfig.hoverColor || '#FF0000';
+        
         populateDropdown("country", fieldNames);
+
     }).catch(err => {
         console.error("Error fetching summary data:", err);
     });
@@ -140,7 +147,8 @@ async function saveConfig() {
   currentConfig["Latitude"] = document.getElementById("latitude").value;
   currentConfig["Longitude"] = document.getElementById("longitude").value;
   currentConfig["Size"] = document.getElementById("size").value;
-  currentConfig["Color"] = document.getElementById("color").value;  
+  currentConfig["oceanColor"] = document.getElementById("oceanColorPicker").value;
+  currentConfig["hoverColor"] = document.getElementById("hoverColorPicker").value;
   currentConfig["Country"] = document.getElementById("country").value;
 
   const fullConfig = JSON.parse(tableau.extensions.settings.get("config") || "{}");

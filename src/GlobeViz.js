@@ -38,13 +38,21 @@ const GlobeViz = ({ data, config }) => {
         .showAtmosphere(false)
         .backgroundColor('#f5f5f5')
         .pointOfView({ lat: 30, lng: -90, altitude: config.defaultAltitude })
-        .pointsData(data)
+        .pointsData(data.filter(d => {
+          const lat = parseFloat(d[config.latitude]);
+          const lng = parseFloat(d[config.longitude]);
+          return !isNaN(lat) && !isNaN(lng);
+        }))
         .pointLat('lat')
         .pointLng('lng')
         .pointRadius(0.3) // Flat circle size
         .pointColor(() => '#ff6200') // Orange circles
         .pointAltitude(0.011) // Flat on surface
         .pointsMerge(false); // Disable merging for distinct circles
+
+        const globeMaterial = world.globeMaterial();
+        const oceanColor = config.oceanColor || 'black';
+        globeMaterial.color.set(oceanColor);
 
       // Optional size scaling
       if (config.size) {
@@ -57,6 +65,7 @@ const GlobeViz = ({ data, config }) => {
         globe.pointRadius(d => sizeScale(parseFloat(d[config.size])));
       }
 
+    const hoverColor = config.hoverColor || 'rgb(255, 165, 0)';
 
     const hasCoordinates = data.some(d => d[config.latitude] && d[config.longitude]);
     const hasCountries = data.some(d => d[config.country]);
@@ -128,7 +137,7 @@ const GlobeViz = ({ data, config }) => {
                 hoveredPolygon = polygon;
             
                 globe
-                  .polygonCapColor(d => (d === polygon ? 'rgb(255, 165, 0)' : d.__previousColor || 'rgb(240, 240, 240)'))
+                  .polygonCapColor(d => (d === polygon ? hoverColor : d.__previousColor || 'rgb(240, 240, 240)'))
                   .polygonsTransitionDuration(200);
 
                 if (polygon && polygon.properties) {

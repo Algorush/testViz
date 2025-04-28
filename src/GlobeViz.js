@@ -54,7 +54,6 @@ const GlobeViz = ({ data, config }) => {
         const oceanColor = config.oceanColor || 'black';
         globeMaterial.color.set(oceanColor);
 
-        window.globe = globe;
       // Optional size scaling
       if (config.size) {
         const sizes = data.map(d => parseFloat(d[config.size]));
@@ -111,7 +110,6 @@ const GlobeViz = ({ data, config }) => {
             .polygonCapColor(() => 'rgb(240, 240, 240)')
             .polygonSideColor(() => 'rgb(200, 200, 200)')
             .polygonStrokeColor(() => '#aaa')
-            .polygonLabel(d => d.properties.ADMIN)
             .onPolygonClick((polygon, event) => {
               event.stopPropagation();
               countryName = polygon.properties.ADMIN || polygon.properties.NAME;

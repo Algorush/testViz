@@ -211,7 +211,7 @@ const GlobeViz = ({ data, config }) => {
           globeEl.current._destructor();
         }
         window.removeEventListener('resize', handleResize);
-        clearInterval(rotationInterval);
+        //clearInterval();
       };
     } catch (error) {
       console.error("GlobeViz error:", error);

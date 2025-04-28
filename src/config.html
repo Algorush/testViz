@@ -98,9 +98,9 @@
         populateDropdown("longitude", fieldNames);
         populateDropdown("size", fieldNames, true);
 
-        document.getElementById('oceanColorPicker').value = currentConfig.oceanColor || '#000080';
+        document.getElementById('oceanColorPicker').value = currentConfig.oceanColor || 'black';
         document.getElementById('hoverColorPicker').value = currentConfig.hoverColor || '#FF0000';
-        
+
         populateDropdown("country", fieldNames);
 
     }).catch(err => {

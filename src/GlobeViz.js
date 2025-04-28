@@ -50,7 +50,7 @@ const GlobeViz = ({ data, config }) => {
         .pointAltitude(0.011) // Flat on surface
         .pointsMerge(false); // Disable merging for distinct circles
 
-        const globeMaterial = world.globeMaterial();
+        const globeMaterial = globe.globeMaterial();
         const oceanColor = config.oceanColor || 'black';
         globeMaterial.color.set(oceanColor);
 

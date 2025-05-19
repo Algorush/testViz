@@ -36,7 +36,7 @@ const GlobeViz = ({ data, config }) => {
       // Initialize globe
       var globe = new Globe(containerRef.current)
         .showAtmosphere(false)
-        .backgroundColor('rgb(243,243,243)')
+        .backgroundColor('rgb(200, 200, 200)')
         .pointOfView({ lat: 30, lng: -90, altitude: config.defaultAltitude })
         .pointsData(data.filter(d => {
           const lat = parseFloat(d[config.latitude]);
@@ -53,6 +53,7 @@ const GlobeViz = ({ data, config }) => {
         const globeMaterial = globe.globeMaterial();
         console.log("globe material", globeMaterial);
         globeMaterial.shininess = 1;
+        globeMaterial.emissive.set('#000000');
         const oceanColor = config.oceanColor || 'black';
         globeMaterial.color.set(oceanColor);
 
@@ -110,7 +111,7 @@ const GlobeViz = ({ data, config }) => {
             .polygonsData(validGeojson)
             .polygonGeoJsonGeometry(d => d.geometry)
             .polygonCapColor(() => 'rgb(240, 240, 240)')
-            .polygonSideColor(() => 'rgb(200, 200, 200)')
+            .polygonSideColor(() => 'rgb(243,243,243)')
             .polygonStrokeColor(() => '#aaa')
             .onPolygonClick((polygon, event) => {
               event.stopPropagation();

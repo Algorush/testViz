@@ -36,7 +36,7 @@ const GlobeViz = ({ data, config }) => {
       // Initialize globe
       var globe = new Globe(containerRef.current)
         .showAtmosphere(false)
-        .backgroundColor('#f5f5f5')
+        .backgroundColor('rgb(243,243,243)')
         .pointOfView({ lat: 30, lng: -90, altitude: config.defaultAltitude })
         .pointsData(data.filter(d => {
           const lat = parseFloat(d[config.latitude]);

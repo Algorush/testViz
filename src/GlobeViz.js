@@ -52,7 +52,7 @@ const GlobeViz = ({ data, config }) => {
 
         //const globeMaterial = globe.globeMaterial();
         const oceanColor = config.oceanColor || 'black';
-        const globeBasicMaterial = new THREE.MeshBasicMaterial({
+        const globeBasicMaterial = new THREE.MeshStandardMaterial({
           oceanColor
         });
 

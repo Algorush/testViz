@@ -50,16 +50,11 @@ const GlobeViz = ({ data, config }) => {
         .pointAltitude(0.011) // Flat on surface
         .pointsMerge(false); // Disable merging for distinct circles
 
-        //const globeMaterial = globe.globeMaterial();
+        const globeMaterial = globe.globeMaterial();
+        console.log("globe material", globeMaterial);
+        globeMaterial.shininess = 1;
         const oceanColor = config.oceanColor || 'black';
-        const globeBasicMaterial = new THREE.MeshStandardMaterial({
-          oceanColor
-        });
-
-        globe.globeMaterial(globeBasicMaterial);
-        window.mat = globeBasicMaterial;
-        
-        //globeMaterial.color.set(oceanColor);
+        globeMaterial.color.set(oceanColor);
 
       // Optional size scaling
       if (config.size) {

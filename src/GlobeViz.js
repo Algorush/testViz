@@ -51,6 +51,7 @@ const GlobeViz = ({ data, config }) => {
         .pointsMerge(false); // Disable merging for distinct circles
 
         const globeMaterial = globe.globeMaterial();
+        window.mat = globeMaterial;
         const oceanColor = config.oceanColor || 'black';
         globeMaterial.color.set(oceanColor);
 

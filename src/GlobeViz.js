@@ -53,12 +53,12 @@ const GlobeViz = ({ data, config }) => {
         const globeMaterial = globe.globeMaterial();
         console.log("globe material", globeMaterial);
         globeMaterial.shininess = 1;
-        globeMaterial.emissive.set('#000000');
-        globeMaterial.specular.set('#000000');
-        globeMaterial.map = null;
+        // globeMaterial.emissive.set('#000000');
+        // globeMaterial.specular.set('#000000');
+        //globeMaterial.map = null;
         globeMaterial.alphaMap = null;
 
-        const oceanColor = config.oceanColor || 'black';
+        const oceanColor = config.oceanColor || 'rgb(200, 200, 200)';
         globeMaterial.color.set(oceanColor);
 
       // Optional size scaling

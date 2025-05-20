@@ -55,8 +55,8 @@ const GlobeViz = ({ data, config }) => {
         globeMaterial.shininess = 1;
         globeMaterial.emissive.set('#000000');
         globeMaterial.specular.set('#000000');
-        globeMaterial.map = none;
-        globeMaterial.alphaMap = none;
+        globeMaterial.map = null;
+        globeMaterial.alphaMap = null;
 
         const oceanColor = config.oceanColor || 'black';
         globeMaterial.color.set(oceanColor);
